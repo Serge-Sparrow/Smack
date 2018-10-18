@@ -9,4 +9,7 @@
     <string name="login">Login</string>
     <string name="sign_up_hint">Don\'t have an account?</string>
     <string name="user_create_button">Sign up here</string>
+    <string name="user_av">Tap to generate user avatar</string>
+    <string name="create_user_btn">Create user</string>
+    <string name="background_color">Generate background color</string>
 </resources>
