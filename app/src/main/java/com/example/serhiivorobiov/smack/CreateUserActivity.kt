@@ -1,10 +1,16 @@
 package com.example.serhiivorobiov.smack
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import kotlinx.android.synthetic.main.activity_create_user.*
+import java.util.*
 
 class CreateUserActivity : AppCompatActivity() {
+
+    var userAvatar = "profileDefault"
+    var userColor = "[0.5,0.5,0.5, 1]"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -13,10 +19,33 @@ class CreateUserActivity : AppCompatActivity() {
 
     fun generateUserAvatar(view: View) {
 
+        val random = Random()
+        val image = random.nextInt(28)
+        val color = random.nextInt(2)
+
+        if(color==0){
+            userAvatar = "light$image"
+        }else{
+            userAvatar = "dark$image"
+        }
+val resourceId = resources.getIdentifier(userAvatar,"drawable",packageName)
+
+        create_act_avatar_view.setImageResource(resourceId)
     }
 
     fun onGenBackgroundColorClicked(view: View) {
 
+        val random = Random()
+        val r = random.nextInt(255)
+        val g = random.nextInt(255)
+        val b = random.nextInt(255)
+create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
+
+        val savedR = r.toDouble()/255
+        val savedG = g.toDouble()/255
+        val savedB = b.toDouble()/255
+
+        userColor = "[$savedR, $savedG,$savedB, 1]"
     }
 
     fun onCreateUserButtonClicked(view: View) {
