@@ -7,4 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="login">Login</string>
+    <string name="sign_up_hint">Don\'t have an account?</string>
+    <string name="user_create_button">Sign up here</string>
 </resources>
