@@ -9,6 +9,9 @@ import com.example.serhiivorobiov.smack.Utilities.URL_REGISTER
 import org.json.JSONObject
 
 object AuthService {
+    var isLoggedIn = false
+    var userEmail = ""
+    var authToken = ""
 
     fun userRegister(context: Context, email: String, password: String, complete: (Boolean) -> Unit) {
 

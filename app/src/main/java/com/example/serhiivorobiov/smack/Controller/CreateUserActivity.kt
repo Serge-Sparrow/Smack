@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AuthService
+import com.example.serhiivorobiov.smack.Services.LoginService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -52,8 +53,19 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
 
     fun onCreateUserButtonClicked(view: View) {
 
-        AuthService.userRegister(this,"sparrow@wp.com", "123456"){
+        val userEmail = create_act_email_text.text.toString()
+        val userPass = create_act_password_text.text.toString()
 
+        AuthService.userRegister(this, userEmail, userPass) {registerSuccess ->
+
+            if(registerSuccess) {
+LoginService.userLogin(this,userEmail,userPass){loginSuccess ->
+    if(loginSuccess) {
+        println(AuthService.authToken +"\n"+ AuthService.userEmail)
+    }
+
+}
+            }
         }
     }
 }
