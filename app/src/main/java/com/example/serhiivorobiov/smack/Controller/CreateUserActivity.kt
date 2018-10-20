@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.serhiivorobiov.smack.R
+import com.example.serhiivorobiov.smack.Services.AddUserService
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.LoginService
+import com.example.serhiivorobiov.smack.Services.UserDataService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -53,6 +55,7 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
 
     fun onCreateUserButtonClicked(view: View) {
 
+        val userName = create_act_user_name_text.text.toString()
         val userEmail = create_act_email_text.text.toString()
         val userPass = create_act_password_text.text.toString()
 
@@ -61,7 +64,16 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
             if(registerSuccess) {
 LoginService.userLogin(this,userEmail,userPass){loginSuccess ->
     if(loginSuccess) {
-        println(AuthService.authToken +"\n"+ AuthService.userEmail)
+
+       AddUserService.createUser(this, userName, userEmail, userColor, userAvatar) {createSuccess->
+           if(createSuccess) {
+               println(UserDataService.avatarColor)
+               println(UserDataService.name)
+               println(UserDataService.avatarName)
+               finish()
+           }
+
+       }
     }
 
 }
