@@ -9,8 +9,12 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.Toast
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.UserDataService
@@ -48,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+        hideKeyboard()
 
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
             BROADCAST_USER_DATA_CHANGE))
@@ -62,6 +67,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onAddChannelButtonClicked(view: View) {
+
+        if(AuthService.isLoggedIn) {
+        val builder = AlertDialog.Builder(this)
+            val dialogAlert = layoutInflater.inflate(R.layout.add_channel_dialog, null)
+            builder.setView(dialogAlert)
+                .setPositiveButton("Add") {dialog, which ->
+                    val nameText = dialogAlert.findViewById<EditText>(R.id.add_channel_name)
+                    val discText = dialogAlert.findViewById<EditText>(R.id.add_channel_disc)
+                    val channelName = nameText.text.toString()
+                    val channelDisc = discText.text.toString()
+                    hideKeyboard()
+
+                }
+                .setNegativeButton("Cancel") {dialog, which ->
+                    hideKeyboard()
+                }
+                .show()
+        }else{
+            Toast.makeText(this, "Please Login!", Toast.LENGTH_LONG).show()
+        }
 
     }
 
@@ -83,5 +108,12 @@ class MainActivity : AppCompatActivity() {
 
     fun onSendMessageButtonClicked(view: View){
 
+    }
+
+    fun hideKeyboard() {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if(inputManager.isAcceptingText){
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken,0)
+        }
     }
 }
