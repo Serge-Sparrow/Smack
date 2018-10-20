@@ -1,14 +1,18 @@
 package com.example.serhiivorobiov.smack.Controller
 
+import android.content.Intent
 import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.view.View
+import android.widget.Toast
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AddUserService
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.LoginService
 import com.example.serhiivorobiov.smack.Services.UserDataService
+import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.*
 
@@ -20,6 +24,7 @@ class CreateUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_user)
+        create_act_spinner.visibility = View.INVISIBLE
     }
 
     fun generateUserAvatar(view: View) {
@@ -50,34 +55,63 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
         val savedG = g.toDouble()/255
         val savedB = b.toDouble()/255
 
-        userColor = "[$savedR, $savedG,$savedB, 1]"
+        userColor = "[$savedR, $savedG, $savedB, 1]"
     }
 
     fun onCreateUserButtonClicked(view: View) {
-
+        enableSpinner(true)
         val userName = create_act_user_name_text.text.toString()
         val userEmail = create_act_email_text.text.toString()
         val userPass = create_act_password_text.text.toString()
 
-        AuthService.userRegister(this, userEmail, userPass) {registerSuccess ->
+        if (userPass.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty()) {
 
-            if(registerSuccess) {
-LoginService.userLogin(this,userEmail,userPass){loginSuccess ->
-    if(loginSuccess) {
+            AuthService.userRegister(this, userEmail, userPass) { registerSuccess ->
 
-       AddUserService.createUser(this, userName, userEmail, userColor, userAvatar) {createSuccess->
-           if(createSuccess) {
-               println(UserDataService.avatarColor)
-               println(UserDataService.name)
-               println(UserDataService.avatarName)
-               finish()
-           }
+                if (registerSuccess) {
+                    LoginService.userLogin(this, userEmail, userPass) { loginSuccess ->
+                        if (loginSuccess) {
+                            AddUserService.createUser(this, userName, userEmail,
+                                userAvatar, userColor) { createSuccess ->
+                                if (createSuccess) {
+                                    val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
+                                    LocalBroadcastManager.getInstance(this).sendBroadcast(userDataChange)
+                                    enableSpinner(false)
+                                    finish()
+                                } else {
+                                    errorToast()
+                                }
 
-       }
+                            }
+                        } else {
+                            errorToast()
+                        }
+                    }
+                } else {
+                    errorToast()
+                }
+            }
+        }else{
+            Toast.makeText(this, "Please, make sure user name, email and/or password are filled in",
+                Toast.LENGTH_LONG).show()
+            enableSpinner(false)
+        }
     }
 
-}
-            }
-        }
+   fun enableSpinner(enable: Boolean){
+
+       if(enable){
+           create_act_spinner.visibility = View.VISIBLE
+       } else{
+           create_act_spinner.visibility = View.INVISIBLE
+       }
+       create_user_btn.isEnabled = !enable
+       create_act_avatar_view.isEnabled = !enable
+       background_color_btn.isEnabled = !enable
+   }
+
+    fun errorToast() {
+        Toast.makeText(this, "Something goes wrong, please try again.",Toast.LENGTH_LONG).show()
+        enableSpinner(false)
     }
 }

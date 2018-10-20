@@ -12,4 +12,5 @@
     <string name="user_av">Tap to generate user avatar</string>
     <string name="create_user_btn">Create user</string>
     <string name="background_color">Generate background color</string>
+    <string name="logout">Logout</string>
 </resources>

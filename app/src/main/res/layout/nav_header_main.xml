@@ -9,15 +9,14 @@
         android:gravity="bottom" android:id="@+id/linearLayout" tools:layout_editor_absoluteY="81dp">
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="86dp"
+            android:layout_height="81dp"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             app:srcCompat="@drawable/profiledefault"
             android:contentDescription="@string/nav_header_desc"
             android:id="@+id/user_image_nav_header"
-            android:layout_marginBottom="56dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/login_btn_nav_header"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -25,28 +24,28 @@
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:id="@+id/user_name_nav_header"
-            tools:text="SergeSparrow"
-            app:layout_constraintStart_toEndOf="@+id/user_image_nav_header" android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="@+id/user_image_nav_header" android:text="SergeSparrow"/>
+            app:layout_constraintStart_toEndOf="@+id/user_image_nav_header" android:layout_marginStart="24dp"
+            app:layout_constraintTop_toTopOf="@+id/user_image_nav_header" android:textColor="@android:color/white"
+            tools:text="seeeee" android:layout_marginTop="16dp"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/user_email_nav_header"
-            tools:text="serge@sparrow.com"
             app:layout_constraintTop_toBottomOf="@+id/user_name_nav_header"
             app:layout_constraintStart_toEndOf="@+id/user_image_nav_header"
-            android:layout_marginStart="8dp" android:text="serge@sparrow.com"/>
+            android:layout_marginStart="24dp" tools:text="rjyyjyyj" android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"/>
     <Button
             android:text="@string/login"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
             android:id="@+id/login_btn_nav_header"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/user_image_nav_header"
+            app:layout_constraintStart_toStartOf="parent"
             android:background="@android:color/transparent" android:onClick="onLoginButtonClicked"
-            android:textAlignment="viewStart"/>
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+    />
     <ImageButton
             android:layout_width="30dp"
             android:layout_height="30dp" app:srcCompat="@drawable/addchannelbutton"

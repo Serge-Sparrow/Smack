@@ -22,7 +22,8 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/create_act_email_text" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/create_act_user_name_text" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_act_user_name_text"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent" android:hint="email"
             android:layout_marginStart="32dp" android:layout_marginEnd="32dp"/>
     <EditText
@@ -31,7 +32,8 @@
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/create_act_password_text" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/create_act_email_text" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_act_email_text"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
             android:hint="password" android:layout_marginStart="32dp" android:layout_marginEnd="32dp"/>
     <TextView
@@ -39,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView2" android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@+id/create_act_password_text" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_act_password_text"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
     <ImageView
             android:layout_width="100dp"
@@ -66,4 +69,13 @@
             android:background="@color/colorPrimary" android:textColor="@android:color/white"
             android:layout_marginStart="32dp" android:layout_marginEnd="34dp" android:text="@string/create_user_btn"
             android:onClick="onCreateUserButtonClicked"/>
+    <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_act_spinner" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"
+            app:layout_constraintStart_toEndOf="@+id/create_act_password_text"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/create_act_password_text"/>
 </android.support.constraint.ConstraintLayout>

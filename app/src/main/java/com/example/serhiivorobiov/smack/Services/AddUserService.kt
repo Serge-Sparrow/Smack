@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 object AddUserService {
 
-fun createUser(context: Context,name: String, email: String, avatarColor: String, avatarName: String, complete:(Boolean)->Unit) {
+fun createUser(context: Context,name: String, email: String, avatarName: String,avatarColor: String , complete:(Boolean)->Unit) {
 
     val jsonBody = JSONObject()
     jsonBody.put("name",name)
@@ -24,7 +24,7 @@ fun createUser(context: Context,name: String, email: String, avatarColor: String
         Method.POST, URL_ADD_USER,null,
         Response.Listener { response ->
             try {
-         UserDataService.name = response.getString("name")
+                UserDataService.name = response.getString("name")
                 UserDataService.email = response.getString("email")
                 UserDataService.avatarName = response.getString("avatarName")
                 UserDataService.avatarColor = response.getString("avatarColor")
@@ -37,7 +37,7 @@ fun createUser(context: Context,name: String, email: String, avatarColor: String
         },
         Response.ErrorListener { error ->
             Log.d("ERROR","Could not add user: $error")
-        }){
+        }) {
         override fun getBodyContentType(): String {
             return "application/json; charset = utf-8"
         }
