@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.serhiivorobiov.smack.R
+import com.example.serhiivorobiov.smack.Services.LoginService
+import com.example.serhiivorobiov.smack.Services.findUserByEmailService
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -14,6 +17,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun onLogActLoginButtonClicked(view: View) {
+
+        val email = login_email_text.text.toString()
+        val password = login_password_text.text.toString()
+
+        LoginService.userLogin(this,email,password){loginSuccess ->
+            if(loginSuccess){
+                findUserByEmailService.findUser(this) {findSuccess ->
+                    if(findSuccess)finish()
+                }
+
+            }
+        }
 
     }
 
