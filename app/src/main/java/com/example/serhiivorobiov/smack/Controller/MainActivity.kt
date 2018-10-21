@@ -15,19 +15,25 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AuthService
+import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
+import com.example.serhiivorobiov.smack.Utilities.SOCKET_URL
+import io.socket.client.IO
+import io.socket.emitter.Emitter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    val socket = IO.socket(SOCKET_URL)
+
     private val userDataChangeReciever = object: BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
-
             if(AuthService.isLoggedIn) {
                 user_name_nav_header.text = UserDataService.name
                 user_email_nav_header.text = UserDataService.email
@@ -44,6 +50,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        socket.connect()
+        socket.on("channelCreated", onNewChannel)
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
@@ -52,10 +60,6 @@ class MainActivity : AppCompatActivity() {
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-        hideKeyboard()
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
-            BROADCAST_USER_DATA_CHANGE))
     }
 
     override fun onBackPressed() {
@@ -64,6 +68,18 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
+            BROADCAST_USER_DATA_CHANGE))
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        socket.disconnect()
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReciever)
     }
 
     fun onAddChannelButtonClicked(view: View) {
@@ -77,17 +93,25 @@ class MainActivity : AppCompatActivity() {
                     val discText = dialogAlert.findViewById<EditText>(R.id.add_channel_disc)
                     val channelName = nameText.text.toString()
                     val channelDisc = discText.text.toString()
-                    hideKeyboard()
-
+                    socket.emit("newChannel",channelName,channelDisc)
                 }
                 .setNegativeButton("Cancel") {dialog, which ->
-                    hideKeyboard()
                 }
                 .show()
         }else{
             Toast.makeText(this, "Please Login!", Toast.LENGTH_LONG).show()
         }
+    }
 
+    private val onNewChannel = Emitter.Listener { args ->
+        runOnUiThread {
+            val channelName = args[0] as String
+            val channelDescription = args[1] as String
+            val channelId = args[2] as String
+
+            val newChannel = Channel(channelName, channelDescription, channelId)
+            MessageService.channels.add(newChannel)
+        }
     }
 
     fun onLoginButtonClicked(view: View) {
@@ -106,7 +130,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onSendMessageButtonClicked(view: View){
+    fun onSendMessageButtonClicked(view: View) {
 
     }
 
