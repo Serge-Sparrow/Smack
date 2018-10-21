@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_LOGIN
 import org.json.JSONException
 import org.json.JSONObject
@@ -21,9 +22,9 @@ object LoginService {
 val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN,null,
     Response.Listener {response ->
         try {
-            AuthService.userEmail = response.getString("user")
-            AuthService.authToken = response.getString("token")
-            AuthService.isLoggedIn = true
+            App.prefs.userEmail = response.getString("user")
+            App.prefs.authToken= response.getString("token")
+            App.prefs.isLoggedIn = true
             complete(true)
         }catch (e: JSONException){
             Log.d("JSON","EXC" + e.localizedMessage)
@@ -41,6 +42,6 @@ val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN,null,
         return requestBody.toByteArray()
     }
 }
-Volley.newRequestQueue(context).add(loginRequest)
+        App.prefs.requestQueue.add(loginRequest)
     }
 }

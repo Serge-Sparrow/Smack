@@ -1,6 +1,7 @@
 package com.example.serhiivorobiov.smack.Services
 
 import android.graphics.Color
+import com.example.serhiivorobiov.smack.Controller.App
 import java.util.*
 
 object UserDataService {
@@ -17,9 +18,9 @@ object UserDataService {
         avatarName =""
         name = ""
         email = ""
-        AuthService.authToken = ""
-        AuthService.userEmail = ""
-        AuthService.isLoggedIn = false
+        App.prefs.authToken = ""
+        App.prefs.userEmail = ""
+        App.prefs.isLoggedIn = false
     }
 
     fun returnAvatarColor (components: String) : Int {
@@ -30,8 +31,8 @@ object UserDataService {
             .replace(",","")
 
         var r = 0
-        var g =0
-        var b =0
+        var g = 0
+        var b = 0
 
         val scanner = Scanner(strippedColor)
         if(scanner.hasNext()) {

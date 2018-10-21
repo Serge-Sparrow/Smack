@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import com.example.serhiivorobiov.smack.Model.Channel
@@ -20,6 +21,7 @@ import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.Services.UserDataService
+import com.example.serhiivorobiov.smack.Services.findUserByEmailService
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.SOCKET_URL
 import io.socket.client.IO
@@ -30,11 +32,17 @@ import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    val socket = IO.socket(SOCKET_URL)
+    lateinit var channelAdapter : ArrayAdapter<Channel>
+        val socket = IO.socket(SOCKET_URL)
+
+    private fun setUpAdapter() {
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,MessageService.channels)
+        channel_list.adapter = channelAdapter
+}
 
     private val userDataChangeReciever = object: BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if(AuthService.isLoggedIn) {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if(App.prefs.isLoggedIn) {
                 user_name_nav_header.text = UserDataService.name
                 user_email_nav_header.text = UserDataService.email
                  val resourceId = resources.getIdentifier(UserDataService.avatarName,"drawable",
@@ -42,6 +50,15 @@ class MainActivity : AppCompatActivity() {
                 user_image_nav_header.setImageResource(resourceId)
                 user_image_nav_header.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 login_btn_nav_header.setText(R.string.logout)
+
+                MessageService.getChannels(context) {complete ->
+
+                    if(complete){
+                        channelAdapter.notifyDataSetChanged()
+
+                    }
+
+                }
             }
         }
     }
@@ -60,6 +77,10 @@ class MainActivity : AppCompatActivity() {
         )
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+        setUpAdapter()
+        if(App.prefs.isLoggedIn){
+            findUserByEmailService.findUser(this){}
+        }
     }
 
     override fun onBackPressed() {
@@ -84,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
     fun onAddChannelButtonClicked(view: View) {
 
-        if(AuthService.isLoggedIn) {
+        if(App.prefs.isLoggedIn) {
         val builder = AlertDialog.Builder(this)
             val dialogAlert = layoutInflater.inflate(R.layout.add_channel_dialog, null)
             builder.setView(dialogAlert)
@@ -111,12 +132,13 @@ class MainActivity : AppCompatActivity() {
 
             val newChannel = Channel(channelName, channelDescription, channelId)
             MessageService.channels.add(newChannel)
+            channelAdapter.notifyDataSetChanged()
         }
     }
 
     fun onLoginButtonClicked(view: View) {
 
-        if(AuthService.isLoggedIn) {
+        if(App.prefs.isLoggedIn) {
             UserDataService.logout()
             user_image_nav_header.setImageResource(R.drawable.profiledefault)
             login_btn_nav_header.setText(R.string.login)

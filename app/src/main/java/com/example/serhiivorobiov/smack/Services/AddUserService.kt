@@ -5,6 +5,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_ADD_USER
 import org.json.JSONException
 import org.json.JSONObject
@@ -48,11 +49,11 @@ fun createUser(context: Context,name: String, email: String, avatarName: String,
 
         override fun getHeaders(): MutableMap<String, String> {
            val headers = HashMap<String,String>()
-            headers.put("Authorization","Bearer ${AuthService.authToken}")
+            headers.put("Authorization","Bearer ${App.prefs.authToken}")
             return headers
         }
 
     }
-    Volley.newRequestQueue(context).add(createUserRequest)
+    App.prefs.requestQueue.add(createUserRequest)
 }
 }

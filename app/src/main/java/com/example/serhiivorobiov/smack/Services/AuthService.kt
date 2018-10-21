@@ -5,13 +5,11 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_REGISTER
 import org.json.JSONObject
 
 object AuthService {
-    var isLoggedIn = false
-    var userEmail = ""
-    var authToken = ""
 
     fun userRegister(context: Context, email: String, password: String, complete: (Boolean) -> Unit) {
 
@@ -35,6 +33,6 @@ object AuthService {
                 return requestBody.toByteArray()
             }
         }
-        Volley.newRequestQueue(context).add(registerRequest)
+        App.prefs.requestQueue.add(registerRequest)
     }
 }

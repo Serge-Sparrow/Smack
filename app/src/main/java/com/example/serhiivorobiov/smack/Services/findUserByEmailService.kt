@@ -7,6 +7,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.URL_FIND_USER
 import org.json.JSONException
@@ -15,7 +16,7 @@ object findUserByEmailService {
 
     fun findUser(context: Context, complete: (Boolean) -> Unit) {
 
-        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_FIND_USER${AuthService.userEmail}",
+        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_FIND_USER${App.prefs.userEmail}",
             null,
             Response.Listener { response ->
                 try {
@@ -44,11 +45,11 @@ object findUserByEmailService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer ${AuthService.authToken}"
+                headers["Authorization"] = "Bearer ${App.prefs.authToken}"
                 return headers
             }
 
         }
-        Volley.newRequestQueue(context).add(findUserRequest)
+        App.prefs.requestQueue.add(findUserRequest)
     }
 }
