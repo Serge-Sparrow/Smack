@@ -12,7 +12,7 @@ import org.json.JSONObject
 
 object AddUserService {
 
-fun createUser(context: Context,name: String, email: String, avatarName: String,avatarColor: String , complete:(Boolean)->Unit) {
+fun createUser(name: String, email: String, avatarName: String,avatarColor: String , complete:(Boolean)->Unit) {
 
     val jsonBody = JSONObject()
     jsonBody.put("name",name)

@@ -11,7 +11,7 @@ import org.json.JSONObject
 
 object AuthService {
 
-    fun userRegister(context: Context, email: String, password: String, complete: (Boolean) -> Unit) {
+    fun userRegister(email: String, password: String, complete: (Boolean) -> Unit) {
 
         val jsonBody = JSONObject()
         jsonBody.put("email",email)

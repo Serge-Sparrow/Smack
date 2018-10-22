@@ -66,12 +66,12 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
 
         if (userPass.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty()) {
 
-            AuthService.userRegister(this, userEmail, userPass) { registerSuccess ->
+            AuthService.userRegister( userEmail, userPass) { registerSuccess ->
 
                 if (registerSuccess) {
-                    LoginService.userLogin(this, userEmail, userPass) { loginSuccess ->
+                    LoginService.userLogin( userEmail, userPass) { loginSuccess ->
                         if (loginSuccess) {
-                            AddUserService.createUser(this, userName, userEmail,
+                            AddUserService.createUser( userName, userEmail,
                                 userAvatar, userColor) { createSuccess ->
                                 if (createSuccess) {
                                     val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
