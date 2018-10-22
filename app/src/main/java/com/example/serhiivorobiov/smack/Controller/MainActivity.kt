@@ -11,11 +11,13 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
+import com.example.serhiivorobiov.smack.Adapters.MessageAdapter
 import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.MessageService
@@ -33,13 +35,19 @@ import com.example.serhiivorobiov.smack.Model.Message
 
 class MainActivity : AppCompatActivity() {
 
+
     var selectedChannel:Channel? = null
     lateinit var channelAdapter : ArrayAdapter<Channel>
     val socket = IO.socket(SOCKET_URL)
+    lateinit var messageAdapter:MessageAdapter
 
     private fun setUpAdapter() {
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,MessageService.channels)
         channel_list.adapter = channelAdapter
+
+        messageAdapter = MessageAdapter(this,MessageService.messages)
+        message_list_view.adapter = messageAdapter
+        message_list_view.layoutManager = LinearLayoutManager(this)
 }
 
     private val userDataChangeReciever = object: BroadcastReceiver(){
@@ -69,13 +77,13 @@ class MainActivity : AppCompatActivity() {
         if(selectedChannel != null){
             MessageService.getMessages(selectedChannel!!.id) {complete ->
                 if(complete){
-
-                    
+                    messageAdapter.notifyDataSetChanged()
+                    if (messageAdapter.itemCount > 0 ){
+                        message_list_view.smoothScrollToPosition(messageAdapter.itemCount-1)
+                    }
                 }
-
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         setUpAdapter()
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
+            BROADCAST_USER_DATA_CHANGE))
         if(App.prefs.isLoggedIn){
             findUserByEmailService.findUser(this){}
             channel_list.setOnItemClickListener { _, _, position, _ ->
@@ -110,12 +120,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-    }
-
-    override fun onResume() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
-            BROADCAST_USER_DATA_CHANGE))
-        super.onResume()
     }
 
     override fun onDestroy() {
@@ -173,9 +177,10 @@ class MainActivity : AppCompatActivity() {
 
                     val newMessage = Message(
                         msgBody, msgUserName, msgChannelId, msgUserAvatar, msgUserAvatarColor,
-                        msgId, msgTime
-                    )
+                        msgId, msgTime)
                     MessageService.messages.add(newMessage)
+                    messageAdapter.notifyDataSetChanged()
+                    message_list_view.smoothScrollToPosition(messageAdapter.itemCount-1)
                 }
             }
         }
@@ -185,8 +190,11 @@ class MainActivity : AppCompatActivity() {
 
         if(App.prefs.isLoggedIn) {
             UserDataService.logout()
+            messageAdapter.notifyDataSetChanged()
+            channelAdapter.notifyDataSetChanged()
             user_image_nav_header.setImageResource(R.drawable.profiledefault)
             login_btn_nav_header.setText(R.string.login)
+            main_channel_name.text = "Please log in"
             user_email_nav_header.text =""
             user_name_nav_header.text =""
             user_image_nav_header.setBackgroundColor(Color.TRANSPARENT)
