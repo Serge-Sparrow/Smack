@@ -22,3 +22,5 @@ class gitExampleInstrumentedTest {
         assertEquals("com.example.serhiivorobiov.smack", appContext.packageName)
     }
 }
+
+

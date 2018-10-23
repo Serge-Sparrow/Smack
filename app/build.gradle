@@ -1,8 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.shazam.fork'
 
 android {
     compileSdkVersion 28
@@ -70,4 +69,21 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
     classpath = configurations.ktlint
     main = "com.github.shyiko.ktlint.Main"
     args "-F", "src/**/*.kt"
+}
+
+fork {
+    title = "Espresso tests"
+    testPackage = "com.example.serhiivorobiov.smack.TestFramework"
+    testClassRegex = "^((?!Abstract).)*Tests\$"
+    fallbackToScreenshots = true
+    totalAllowedRetryQuota = 100
+    retryPerTestCaseQuota = 2
+    poolingStrategy {
+        computed {
+            characteristic = "sw"
+            groups {
+                allDevices = 0
+            }
+        }
+    }
 }
