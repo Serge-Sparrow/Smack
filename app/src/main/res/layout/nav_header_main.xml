@@ -6,7 +6,8 @@
         android:layout_height="@dimen/nav_header_height"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:gravity="bottom" android:id="@+id/linearLayout" tools:layout_editor_absoluteY="81dp">
+        android:gravity="bottom" android:id="@+id/linearLayout"
+        tools:layout_editor_absoluteY="81dp">
 
     <ImageView
             android:layout_width="86dp"
