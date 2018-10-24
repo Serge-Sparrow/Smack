@@ -3,6 +3,23 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.shazam.fork'
 
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.0'
+        // These docs use an open ended version so that our plugin
+        // can be updated quickly in response to Android tooling updates
+        // We recommend changing it to the latest version from our changelog:
+        // https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,6 +39,7 @@ android {
 }
 
 dependencies {
+    compile 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -42,6 +60,7 @@ dependencies {
 
 repositories {
     jcenter()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 configurations {

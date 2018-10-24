@@ -32,6 +32,9 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import com.example.serhiivorobiov.smack.Model.Message
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Fabric.with(this, Crashlytics())
         setSupportActionBar(toolbar)
         socket.connect()
         socket.on("channelCreated", onNewChannel)

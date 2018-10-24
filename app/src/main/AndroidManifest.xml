@@ -25,6 +25,9 @@
         </activity>
         <activity android:name=".Controller.CreateUserActivity">
         </activity>
+        <meta-data
+                android:name="io.fabric.ApiKey"
+                android:value="5551e41020d525a70739b184e1f36638dafa3ee2" />
     </application>
 
 </manifest>
