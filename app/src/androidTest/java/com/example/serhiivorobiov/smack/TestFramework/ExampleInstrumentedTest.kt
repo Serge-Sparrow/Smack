@@ -32,4 +32,16 @@ class WaiterTests {
             onView(withId(R.id.login_btn_nav_header))
                 .perform(click())
     }
+
+    @Test
+    fun anotherSimpleTest() {
+        onView(withContentDescription("Open navigation drawer"))
+            .perform(click())
+        onView(withId(R.id.user_image_nav_header))
+            .check(matches(isDisplayed()))
+        onView(withId(R.id.login_btn_nav_header))
+            .perform(click())
+            onView(withId(R.id.user_create_btn))
+                .check(matches(isDisplayed()))
+    }
 }
