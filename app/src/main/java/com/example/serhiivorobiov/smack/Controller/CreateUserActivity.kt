@@ -11,10 +11,9 @@ import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AddUserService
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.LoginService
-import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import kotlinx.android.synthetic.main.activity_create_user.*
-import java.util.*
+import java.util.Random
 
 class CreateUserActivity : AppCompatActivity() {
 
@@ -33,12 +32,12 @@ class CreateUserActivity : AppCompatActivity() {
         val image = random.nextInt(28)
         val color = random.nextInt(2)
 
-        if(color==0){
+        if (color == 0) {
             userAvatar = "light$image"
-        }else{
+        } else {
             userAvatar = "dark$image"
         }
-val resourceId = resources.getIdentifier(userAvatar,"drawable",packageName)
+val resourceId = resources.getIdentifier(userAvatar, "drawable", packageName)
 
         create_act_avatar_view.setImageResource(resourceId)
     }
@@ -49,11 +48,11 @@ val resourceId = resources.getIdentifier(userAvatar,"drawable",packageName)
         val r = random.nextInt(255)
         val g = random.nextInt(255)
         val b = random.nextInt(255)
-create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
+create_act_avatar_view.setBackgroundColor(Color.rgb(r, g, b))
 
-        val savedR = r.toDouble()/255
-        val savedG = g.toDouble()/255
-        val savedB = b.toDouble()/255
+        val savedR = r.toDouble() / 255
+        val savedG = g.toDouble() / 255
+        val savedB = b.toDouble() / 255
 
         userColor = "[$savedR, $savedG, $savedB, 1]"
     }
@@ -66,12 +65,11 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
 
         if (userPass.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty()) {
 
-            AuthService.userRegister( userEmail, userPass) { registerSuccess ->
-
+            AuthService.userRegister(userEmail, userPass) { registerSuccess ->
                 if (registerSuccess) {
-                    LoginService.userLogin( userEmail, userPass) { loginSuccess ->
+                    LoginService.userLogin(userEmail, userPass) { loginSuccess ->
                         if (loginSuccess) {
-                            AddUserService.createUser( userName, userEmail,
+                            AddUserService.createUser(userName, userEmail,
                                 userAvatar, userColor) { createSuccess ->
                                 if (createSuccess) {
                                     val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
@@ -81,7 +79,6 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
                                 } else {
                                     errorToast()
                                 }
-
                             }
                         } else {
                             errorToast()
@@ -91,27 +88,28 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r,g,b))
                     errorToast()
                 }
             }
-        }else{
+        } else {
             Toast.makeText(this, "Please, make sure user name, email and/or password are filled in",
                 Toast.LENGTH_LONG).show()
             enableSpinner(false)
         }
     }
 
-   fun enableSpinner(enable: Boolean){
+    fun enableSpinner(enable: Boolean) {
 
-       if(enable){
-           create_act_spinner.visibility = View.VISIBLE
-       } else{
-           create_act_spinner.visibility = View.INVISIBLE
-       }
-       create_user_btn.isEnabled = !enable
-       create_act_avatar_view.isEnabled = !enable
-       background_color_btn.isEnabled = !enable
-   }
+        if (enable) {
+            create_act_spinner.visibility = View.VISIBLE
+        } else {
+            create_act_spinner.visibility = View.INVISIBLE
+        }
+        create_user_btn.isEnabled = !enable
+        create_act_avatar_view.isEnabled = !enable
+        background_color_btn.isEnabled = !enable
+    }
 
     fun errorToast() {
-        Toast.makeText(this, "Something goes wrong, please try again.",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Something goes wrong, please try again.",
+            Toast.LENGTH_LONG).show()
         enableSpinner(false)
     }
 }

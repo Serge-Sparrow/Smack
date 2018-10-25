@@ -1,10 +1,9 @@
 package com.example.serhiivorobiov.smack.Services
 
-import android.content.Context
 import android.util.Log
 import com.android.volley.Response
+import com.android.volley.Response.Listener
 import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.Volley
 import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.Model.Message
@@ -17,30 +16,28 @@ object MessageService {
     val channels = ArrayList<Channel>()
     val messages = ArrayList<Message>()
 
-
-    fun getChannels(complete: (Boolean)->Unit) {
-        val channelsRequest = object: JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null, Response.Listener {response ->
+    fun getChannels(complete: (Boolean) -> Unit) {
+        val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null,
+            Listener { response ->
             clearCannels()
-        try{
-            for(x in 0 until response.length()) {
+        try {
+            for (x in 0 until response.length()) {
                 val channel = response.getJSONObject(x)
                 val chanName = channel.getString("name")
                 val chanDesc = channel.getString("description")
                 val chanId = channel.getString("_id")
 
-                val newChan = Channel(chanName,chanDesc,chanId)
+                val newChan = Channel(chanName, chanDesc, chanId)
                 this.channels.add(newChan)
             }
             complete(true)
-
-        }catch (e: JSONException){
-                Log.d("JSON","EXC: "+ e.localizedMessage)
+        } catch (e: JSONException) {
+                Log.d("JSON", "EXC: " + e.localizedMessage)
                 complete(false)
             }
-
         },
-            Response.ErrorListener {error ->
-                Log.d("ERROR","Could not retrieve channels")
+            Response.ErrorListener { _ ->
+                Log.d("ERROR", "Could not retrieve channels")
                 complete(false)
             }) {
 
@@ -48,22 +45,22 @@ object MessageService {
                 return "application/json; charset = utf-8"
             }
             override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String,String>()
+                val headers = HashMap<String, String>()
                 headers["Authorization"] = "Bearer ${App.prefs.authToken}"
                 return headers
             }
         }
-           App.prefs.requestQueue.add(channelsRequest)
+        App.prefs.requestQueue.add(channelsRequest)
     }
 
-    fun getMessages(channelId:String, complete: (Boolean)->Unit) {
+    fun getMessages(channelId: String, complete: (Boolean) -> Unit) {
         val url = "$URL_GET_MESSAGES$channelId"
 
-
-        val messagesRequest = object :JsonArrayRequest(Method.GET, url, null, Response.Listener {response ->
+        val messagesRequest = object : JsonArrayRequest(Method.GET, url, null,
+            Listener { response ->
             clearMessages()
             try {
-                for(x in 0 until response.length()) {
+                for (x in 0 until response.length()) {
 
                     val message = response.getJSONObject(x)
                     val msgBody = message.getString("messageBody")
@@ -79,20 +76,21 @@ object MessageService {
                     this.messages.add(newMessage)
                 }
                 complete(true)
-            }catch (e: JSONException){
-                Log.d("JSON","EXC: "+ e.localizedMessage)
+            } catch (e: JSONException) {
+                Log.d("JSON", "EXC: " + e.localizedMessage)
                 complete(false)
             }
         },
-            Response.ErrorListener { error ->
-                Log.d("ERROR","Could not retrieve messages")
-                complete(false)}) {
+            Response.ErrorListener { _ ->
+                Log.d("ERROR", "Could not retrieve messages")
+                complete(false)
+            }) {
 
             override fun getBodyContentType(): String {
                 return "application/json; charset = utf-8"
             }
             override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String,String>()
+                val headers = HashMap<String, String>()
                 headers["Authorization"] = "Bearer ${App.prefs.authToken}"
                 return headers
             }

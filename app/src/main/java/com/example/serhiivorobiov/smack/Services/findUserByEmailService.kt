@@ -6,7 +6,6 @@ import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.URL_FIND_USER
@@ -48,7 +47,6 @@ object findUserByEmailService {
                 headers["Authorization"] = "Bearer ${App.prefs.authToken}"
                 return headers
             }
-
         }
         App.prefs.requestQueue.add(findUserRequest)
     }

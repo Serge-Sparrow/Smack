@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 } else errorToast()
             }
-        }else{
+        } else {
             Toast.makeText(this, "Please, make sure email and/or password are filled in!",
                 Toast.LENGTH_LONG).show()
             enableSpinner(false)
@@ -50,11 +50,11 @@ class LoginActivity : AppCompatActivity() {
 
 //    fun onCrashClicked(view: View): Unit = throw RuntimeException("This is a crash")
 
-    fun enableSpinner(enable: Boolean){
+    fun enableSpinner(enable: Boolean) {
 
-        if (enable){
-           login_spinner.visibility = View.VISIBLE
-        } else{
+        if (enable) {
+            login_spinner.visibility = View.VISIBLE
+        } else {
             login_spinner.visibility = View.INVISIBLE
         }
         log_act_login_btn.isEnabled = !enable
@@ -68,8 +68,8 @@ class LoginActivity : AppCompatActivity() {
 
     fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if(inputManager.isAcceptingText){
-            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken,0)
+        if (inputManager.isAcceptingText) {
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
     }
 }

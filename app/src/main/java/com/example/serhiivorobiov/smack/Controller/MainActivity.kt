@@ -35,37 +35,36 @@ import com.example.serhiivorobiov.smack.Model.Message
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
-
 class MainActivity : AppCompatActivity() {
 
-
-    var selectedChannel:Channel? = null
-    lateinit var channelAdapter : ArrayAdapter<Channel>
+    var selectedChannel: Channel? = null
+    lateinit var channelAdapter: ArrayAdapter<Channel>
     val socket = IO.socket(SOCKET_URL)
-    lateinit var messageAdapter:MessageAdapter
+    lateinit var messageAdapter: MessageAdapter
 
     private fun setUpAdapter() {
-        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,MessageService.channels)
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
+            MessageService.channels)
         channel_list.adapter = channelAdapter
 
-        messageAdapter = MessageAdapter(this,MessageService.messages)
+        messageAdapter = MessageAdapter(this, MessageService.messages)
         message_list_view.adapter = messageAdapter
         message_list_view.layoutManager = LinearLayoutManager(this)
 }
 
-    private val userDataChangeReciever = object: BroadcastReceiver(){
+    private val userDataChangeReciever = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            if(App.prefs.isLoggedIn) {
+            if (App.prefs.isLoggedIn) {
                 user_name_nav_header.text = UserDataService.name
                 user_email_nav_header.text = UserDataService.email
-                 val resourceId = resources.getIdentifier(UserDataService.avatarName,"drawable",
-                     packageName)
+                val resourceId = resources.getIdentifier(UserDataService.avatarName, "drawable",
+                    packageName)
                 user_image_nav_header.setImageResource(resourceId)
                 user_image_nav_header.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 login_btn_nav_header.setText(R.string.logout)
 
-                MessageService.getChannels {complete ->
-                    if(MessageService.channels.count() > 0) {
+                MessageService.getChannels { _ ->
+                    if (MessageService.channels.count() > 0) {
                         selectedChannel = MessageService.channels[0]
                         channelAdapter.notifyDataSetChanged()
                         updateWithCannel()
@@ -77,12 +76,12 @@ class MainActivity : AppCompatActivity() {
 
     fun updateWithCannel() {
         main_channel_name.text = "#${selectedChannel?.name}"
-        if(selectedChannel != null){
-            MessageService.getMessages(selectedChannel!!.id) {complete ->
-                if(complete){
+        if (selectedChannel != null) {
+            MessageService.getMessages(selectedChannel!!.id) { complete ->
+                if (complete) {
                     messageAdapter.notifyDataSetChanged()
-                    if (messageAdapter.itemCount > 0 ){
-                        message_list_view.smoothScrollToPosition(messageAdapter.itemCount-1)
+                    if (messageAdapter.itemCount > 0) {
+                        message_list_view.smoothScrollToPosition(messageAdapter.itemCount - 1)
                     }
                 }
             }
@@ -96,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         socket.connect()
         socket.on("channelCreated", onNewChannel)
-        socket.on("messageCreated",onNewMessage)
+        socket.on("messageCreated", onNewMessage)
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar,
@@ -108,8 +107,8 @@ class MainActivity : AppCompatActivity() {
         setUpAdapter()
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
             BROADCAST_USER_DATA_CHANGE))
-        if(App.prefs.isLoggedIn){
-            findUserByEmailService.findUser(this){}
+        if (App.prefs.isLoggedIn) {
+            findUserByEmailService.findUser(this) {}
             channel_list.setOnItemClickListener { _, _, position, _ ->
                 selectedChannel = MessageService.channels[position]
                 drawer_layout.closeDrawer(GravityCompat.START)
@@ -134,27 +133,27 @@ class MainActivity : AppCompatActivity() {
 
     fun onAddChannelButtonClicked(view: View) {
 
-        if(App.prefs.isLoggedIn) {
+        if (App.prefs.isLoggedIn) {
         val builder = AlertDialog.Builder(this)
             val dialogAlert = layoutInflater.inflate(R.layout.add_channel_dialog, null)
             builder.setView(dialogAlert)
-                .setPositiveButton("Add") {dialog, which ->
+                .setPositiveButton("Add") { _, _ ->
                     val nameText = dialogAlert.findViewById<EditText>(R.id.add_channel_name)
                     val discText = dialogAlert.findViewById<EditText>(R.id.add_channel_disc)
                     val channelName = nameText.text.toString()
                     val channelDisc = discText.text.toString()
-                    socket.emit("newChannel",channelName,channelDisc)
+                    socket.emit("newChannel", channelName, channelDisc)
                 }
-                .setNegativeButton("Cancel") {dialog, which ->
+                .setNegativeButton("Cancel") { _, _ ->
                 }
                 .show()
-        }else{
+        } else {
             Toast.makeText(this, "Please Login!", Toast.LENGTH_LONG).show()
         }
     }
 
     private val onNewChannel = Emitter.Listener { args ->
-        if(App.prefs.isLoggedIn) {
+        if (App.prefs.isLoggedIn) {
             runOnUiThread {
                 val channelName = args[0] as String
                 val channelDescription = args[1] as String
@@ -168,10 +167,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onNewMessage = Emitter.Listener { args ->
-        if(App.prefs.isLoggedIn) {
+        if (App.prefs.isLoggedIn) {
             runOnUiThread {
                 val msgChannelId = args[2] as String
-                if(msgChannelId == selectedChannel?.id) {
+                if (msgChannelId == selectedChannel?.id) {
                     val msgBody = args[0] as String
                     val msgUserName = args[3] as String
                     val msgUserAvatar = args[4] as String
@@ -184,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                         msgId, msgTime)
                     MessageService.messages.add(newMessage)
                     messageAdapter.notifyDataSetChanged()
-                    message_list_view.smoothScrollToPosition(messageAdapter.itemCount-1)
+                    message_list_view.smoothScrollToPosition(messageAdapter.itemCount - 1)
                 }
             }
         }
@@ -192,25 +191,24 @@ class MainActivity : AppCompatActivity() {
 
     fun onLoginButtonClicked(view: View) {
 
-        if(App.prefs.isLoggedIn) {
+        if (App.prefs.isLoggedIn) {
             UserDataService.logout()
             messageAdapter.notifyDataSetChanged()
             channelAdapter.notifyDataSetChanged()
             user_image_nav_header.setImageResource(R.drawable.profiledefault)
             login_btn_nav_header.setText(R.string.login)
             main_channel_name.text = "Please log in"
-            user_email_nav_header.text =""
-            user_name_nav_header.text =""
+            user_email_nav_header.text = ""
+            user_name_nav_header.text = ""
             user_image_nav_header.setBackgroundColor(Color.TRANSPARENT)
-
-        }else{
+        } else {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
 
     fun onSendMessageButtonClicked(view: View) {
-        if(App.prefs.isLoggedIn && selectedChannel != null && message_text_field.text.isNotEmpty()) {
+        if (App.prefs.isLoggedIn && selectedChannel != null && message_text_field.text.isNotEmpty()) {
 
             val userId = UserDataService.id
             val channelId = selectedChannel!!.id
@@ -223,8 +221,8 @@ class MainActivity : AppCompatActivity() {
 
     fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if(inputManager.isAcceptingText){
-            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken,0)
+        if (inputManager.isAcceptingText) {
+            inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
     }
 }

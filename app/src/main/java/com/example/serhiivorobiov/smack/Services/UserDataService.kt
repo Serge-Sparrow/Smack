@@ -2,20 +2,20 @@ package com.example.serhiivorobiov.smack.Services
 
 import android.graphics.Color
 import com.example.serhiivorobiov.smack.Controller.App
-import java.util.*
+import java.util.Scanner
 
 object UserDataService {
 
-    var id =""
+    var id = ""
     var avatarColor = ""
-    var avatarName =""
+    var avatarName = ""
     var name = ""
     var email = ""
 
-    fun logout(){
-        id =""
+    fun logout() {
+        id = ""
         avatarColor = ""
-        avatarName =""
+        avatarName = ""
         name = ""
         email = ""
         App.prefs.authToken = ""
@@ -25,23 +25,23 @@ object UserDataService {
         MessageService.clearCannels()
     }
 
-    fun returnAvatarColor (components: String) : Int {
+    fun returnAvatarColor(components: String): Int {
 
         val strippedColor = components
-            .replace("[","")
-            .replace("]","")
-            .replace(",","")
+            .replace("[", "")
+            .replace("]", "")
+            .replace(",", "")
 
         var r = 0
         var g = 0
         var b = 0
 
         val scanner = Scanner(strippedColor)
-        if(scanner.hasNext()) {
-            r = (scanner.nextDouble()*255).toInt()
-            g = (scanner.nextDouble()*255).toInt()
-            b = (scanner.nextDouble()*255).toInt()
+        if (scanner.hasNext()) {
+            r = (scanner.nextDouble() * 255).toInt()
+            g = (scanner.nextDouble() * 255).toInt()
+            b = (scanner.nextDouble() * 255).toInt()
         }
-        return Color.rgb(r,g,b)
+        return Color.rgb(r, g, b)
     }
 }
