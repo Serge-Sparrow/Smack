@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    fun onCrashClicked(view: View): Unit = throw RuntimeException("This is a crash")
+//    fun onCrashClicked(view: View): Unit = throw RuntimeException("This is a crash")
 
     fun enableSpinner(enable: Boolean){
 
