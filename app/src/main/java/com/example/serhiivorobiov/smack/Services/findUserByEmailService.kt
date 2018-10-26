@@ -7,6 +7,7 @@ import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.serhiivorobiov.smack.Controller.App
+import com.example.serhiivorobiov.smack.Controller.LoginActivity
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.URL_FIND_USER
 import org.json.JSONException
@@ -33,9 +34,9 @@ object findUserByEmailService {
                     complete(false)
                 }
             },
-            Response.ErrorListener { error ->
-                Log.d("ERROR", "Could not find the user.")
+            Response.ErrorListener { _ ->
                 complete(false)
+                Log.d("ERROR", "Could not find the user.")
             }) {
 
             override fun getBodyContentType(): String {

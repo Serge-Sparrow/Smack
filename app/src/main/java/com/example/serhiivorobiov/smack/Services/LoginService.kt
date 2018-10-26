@@ -31,6 +31,7 @@ val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN, null,
     },
     Response.ErrorListener { error ->
         Log.d("ERROR", "Could not login user: $error")
+        complete(false)
     }) {
     override fun getBodyContentType(): String {
         return "application/json; charset = utf-8"

@@ -8,5 +8,6 @@ const val URL_ADD_USER = "${BASE_URL}user/add"
 const val URL_FIND_USER = "${BASE_URL}user/byEmail/"
 const val URL_GET_CHANNELS = "${BASE_URL}channel"
 const val URL_GET_MESSAGES = "${BASE_URL}message/byChannel/"
+const val URL_DELETE_USER = "${BASE_URL}user/"
 
 const val BROADCAST_USER_DATA_CHANGE = "BROADCAST USER DATA CHANGE"

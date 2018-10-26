@@ -18,7 +18,7 @@ import java.util.Random
 class CreateUserActivity : AppCompatActivity() {
 
     var userAvatar = "profileDefault"
-    var userColor = "[0.5,0.5,0.5, 1]"
+    var userColor = "[0.5, 0.5, 0.5, 1]"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,18 +64,40 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r, g, b))
         val userPass = create_act_password_text.text.toString()
 
         if (userPass.isNotEmpty() && userEmail.isNotEmpty() && userName.isNotEmpty()) {
+            LoginService.userLogin(userEmail, userPass) { exist ->
+                if (exist) {
+                    AddUserService.createUser(
+                        userName, userEmail,
+                        userAvatar, userColor
+                    ) { createSuccess ->
+                        if (createSuccess) {
+                            val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
+                            LocalBroadcastManager.getInstance(this).sendBroadcast(userDataChange)
+                            enableSpinner(false)
+                            finish()
+                        } else {
+                            errorToast()
+                        }
+                    }
+                } else {
 
-            AuthService.userRegister(userEmail, userPass) { registerSuccess ->
-                if (registerSuccess) {
-                    LoginService.userLogin(userEmail, userPass) { loginSuccess ->
-                        if (loginSuccess) {
-                            AddUserService.createUser(userName, userEmail,
-                                userAvatar, userColor) { createSuccess ->
-                                if (createSuccess) {
-                                    val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
-                                    LocalBroadcastManager.getInstance(this).sendBroadcast(userDataChange)
-                                    enableSpinner(false)
-                                    finish()
+                    AuthService.userRegister(userEmail, userPass) { registerSuccess ->
+                        if (registerSuccess) {
+                            LoginService.userLogin(userEmail, userPass) { loginSuccess ->
+                                if (loginSuccess) {
+                                    AddUserService.createUser(
+                                        userName, userEmail,
+                                        userAvatar, userColor
+                                    ) { createSuccess ->
+                                        if (createSuccess) {
+                                            val userDataChange = Intent(BROADCAST_USER_DATA_CHANGE)
+                                            LocalBroadcastManager.getInstance(this).sendBroadcast(userDataChange)
+                                            enableSpinner(false)
+                                            finish()
+                                        } else {
+                                            errorToast()
+                                        }
+                                    }
                                 } else {
                                     errorToast()
                                 }
@@ -84,13 +106,13 @@ create_act_avatar_view.setBackgroundColor(Color.rgb(r, g, b))
                             errorToast()
                         }
                     }
-                } else {
-                    errorToast()
                 }
             }
         } else {
-            Toast.makeText(this, "Please, make sure user name, email and/or password are filled in",
-                Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this, "Please, make sure user name, email and/or password are filled in",
+                Toast.LENGTH_LONG
+            ).show()
             enableSpinner(false)
         }
     }
