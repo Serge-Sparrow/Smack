@@ -9,6 +9,9 @@ import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.UserDataService
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.USER_NAME
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
 import java.util.Random
 
 class CreateUserScreen : BaseScreen() {
@@ -22,12 +25,20 @@ class CreateUserScreen : BaseScreen() {
     private val avatar = onView(withId(R.id.create_act_avatar_view))
     private val backgroundColor = onView(withId(R.id.background_color_btn))
 
-    fun onClickCreateUSerButton(validLog: Int): BaseScreen {
-        return when (validLog) {
+    fun onClickCreateUSerButton(typeOfCreation: Int): BaseScreen {
+        return when (typeOfCreation) {
+            //Create user and account
+            2 -> {
+                setAllTextFields(USER_NAME, randomSetUserEmail(), randomUserPassword())
+                clickOnAvatarImage()
+                onClickBackground()
+
+                uniqueView.perform(click())
+                ChannelScreen()
+            }
+            //Create user using existing account
             1 -> {
-                setUserName()
-                setUserEmail()
-                setUserPassword()
+                setAllTextFields(USER_NAME, VALID_EMAIL, VALID_PASSWORD)
                 clickOnAvatarImage()
                 onClickBackground()
 
@@ -47,35 +58,38 @@ class CreateUserScreen : BaseScreen() {
         backgroundColor.perform(click())
     }
 
-    fun setUserName() {
-        val ran = Random()
-        val char = 'a'
-        fun randomChar() : Char = (ran.nextInt(26) + char.toInt()).toChar()
-        val name = "${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}"
-        userName.perform(replaceText(name))
-    }
-
-    fun setUserEmail() {
+    fun randomSetUserEmail(): String {
 
         val ran = Random()
         val char = 'a'
         fun randomChar() : Char = (ran.nextInt(26) + char.toInt()).toChar()
-        val email = "${randomChar()}${randomChar()}${randomChar()}${randomChar()}" + "@example.com"
-        userEmail.perform(replaceText(email))
+        return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}" + "@example.com")
     }
 
-    fun setUserPassword() {
+    fun randomUserPassword(): String {
         val ran = Random()
-        val password = "${ran.nextInt(1000000000)}"
-        userPass.perform(replaceText(password))
+        return "${ran.nextInt(1000000000)}"
     }
 
     fun clickOnAvatarImage() {
         avatar.perform(click())
     }
 
-    init{
+    fun setAllTextFields (name: String, email: String, pass: String) {
+        userName.perform(replaceText(name))
+        userEmail.perform(replaceText(email))
+        userPass.perform(replaceText(pass))
+    }
 
+    init{
         uniqueView.check(matches(isDisplayed()))
     }
+
+    //    fun randomSetUserName(): String {
+//        val ran = Random()
+//        val char = 'a'
+//        fun randomChar() : Char = (ran.nextInt(26) + char.toInt()).toChar()
+//        return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}")
+//    }
+
 }

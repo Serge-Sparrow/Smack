@@ -36,6 +36,7 @@ import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity() {
+//    private val counting = CountingIdlingResource("")
 
     var selectedChannel: Channel? = null
     lateinit var channelAdapter: ArrayAdapter<Channel>

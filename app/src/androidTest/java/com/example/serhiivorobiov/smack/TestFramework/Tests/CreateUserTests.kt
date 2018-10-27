@@ -67,7 +67,6 @@ class CreateUserTests {
             .perform(click())
         onView(withId(R.id.user_create_btn)).perform(click())
         val createScr = CreateUserScreen()
-        createScr.setUserName()
         sleep(500)
         createScr.onClickCreateUSerButton(0)
         sleep(500)
