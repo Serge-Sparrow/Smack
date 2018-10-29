@@ -13,9 +13,9 @@ import android.support.test.rule.ActivityTestRule
 import com.example.serhiivorobiov.smack.Controller.MainActivity
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.UserDataService
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.USER_NAME
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_USER_NAME
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import java.util.Random
@@ -28,8 +28,9 @@ class CreateUserScreen : BaseScreen() {
     private val userName = onView(withId(R.id.create_act_user_name_text))
     private val userEmail  = onView(withId(R.id.create_act_email_text))
     private val userPass  = onView(withId(R.id.create_act_password_text))
-    var avatar:ViewInteraction? = onView(withId(R.id.create_act_avatar_view))
+    private val avatar: ViewInteraction? = onView(withId(R.id.create_act_avatar_view))
     private val backgroundColor = onView(withId(R.id.background_color_btn))
+
     private val toast:ViewInteraction? = onView(
         withText("Please, make sure user name, email and/or password are filled in")
         )
@@ -43,7 +44,7 @@ class CreateUserScreen : BaseScreen() {
         return when (typeOfCreation) {
             //Create user and account
             2 -> {
-                setAllTextFields(USER_NAME, randomSetUserEmail(), randomUserPassword())
+                setAllTextFields(VALID_USER_NAME, randomSetUserEmail(), randomUserPassword())
                 onClickBackground()
                 clickOnAvatarImage()
 
@@ -52,7 +53,7 @@ class CreateUserScreen : BaseScreen() {
             }
             //Create user using existing account
             1 -> {
-                setAllTextFields(USER_NAME, VALID_EMAIL, VALID_PASSWORD)
+                setAllTextFields(VALID_USER_NAME, VALID_EMAIL, VALID_PASSWORD)
                 onClickBackground()
                 clickOnAvatarImage()
 
@@ -63,7 +64,7 @@ class CreateUserScreen : BaseScreen() {
             else -> {
                 uniqueView.perform(click())
                 UserDataService.id = ""
-                setAllTextFields(USER_NAME,null, null)
+                setAllTextFields(VALID_USER_NAME,null, null)
                 this
             }
         }
@@ -78,7 +79,7 @@ class CreateUserScreen : BaseScreen() {
 
         val ran = Random()
         val char = 'a'
-        fun randomChar() : Char = (ran.nextInt(26) + char.toInt()).toChar()
+        fun randomChar(): Char = (ran.nextInt(26) + char.toInt()).toChar()
         return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}" + "@example.com")
     }
 
@@ -92,7 +93,7 @@ class CreateUserScreen : BaseScreen() {
     }
 
     private fun setAllTextFields(name: String?, email: String?, pass: String?) {
-        if(name!=null) {
+        if (name != null) {
             userName.perform(replaceText(name))
         }
         if (email != null) {

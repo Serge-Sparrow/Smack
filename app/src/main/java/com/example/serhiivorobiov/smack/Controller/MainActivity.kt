@@ -22,7 +22,7 @@ import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.Services.UserDataService
-import com.example.serhiivorobiov.smack.Services.findUserByEmailService
+import com.example.serhiivorobiov.smack.Services.FindUserByEmailService
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.SOCKET_URL
 import io.socket.client.IO
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         message_list_view.layoutManager = LinearLayoutManager(this)
 }
 
-    private val userDataChangeReciever = object : BroadcastReceiver() {
+    private val userDataChangeReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
             if (App.prefs.isLoggedIn) {
                 user_name_nav_header.text = UserDataService.name
@@ -67,14 +67,14 @@ class MainActivity : AppCompatActivity() {
                     if (MessageService.channels.count() > 0) {
                         selectedChannel = MessageService.channels[0]
                         channelAdapter.notifyDataSetChanged()
-                        updateWithCannel()
+                        updateWithChannel()
                     }
                 }
             }
         }
     }
 
-    fun updateWithCannel() {
+    fun updateWithChannel() {
         main_channel_name.text = "#${selectedChannel?.name}"
         if (selectedChannel != null) {
             MessageService.getMessages(selectedChannel!!.id) { complete ->
@@ -105,18 +105,18 @@ class MainActivity : AppCompatActivity() {
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
         setUpAdapter()
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReceiver, IntentFilter(
             BROADCAST_USER_DATA_CHANGE))
     }
 
     override fun onStart() {
         super.onStart()
         if (App.prefs.isLoggedIn) {
-            findUserByEmailService.findUser(this) {}
+            FindUserByEmailService.findUser(this) {}
             channel_list.setOnItemClickListener { _, _, position, _ ->
                 selectedChannel = MessageService.channels[position]
                 drawer_layout.closeDrawer(GravityCompat.START)
-                updateWithCannel()
+                updateWithChannel()
             }
         }
     }
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         socket.disconnect()
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReciever)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReceiver)
     }
 
     fun onAddChannelButtonClicked(view: View) {
@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (inputManager.isAcceptingText) {
             inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)

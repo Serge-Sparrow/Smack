@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.LoginService.userLogin
-import com.example.serhiivorobiov.smack.Services.findUserByEmailService
+import com.example.serhiivorobiov.smack.Services.FindUserByEmailService
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -29,8 +29,9 @@ class LoginActivity : AppCompatActivity() {
             hideKeyboard()
             userLogin(email, password) { loginSuccess ->
                 if (loginSuccess) {
-                    findUserByEmailService.findUser(this) { findSuccess ->
-                        if (findSuccess) finish() else errorToast()
+                    FindUserByEmailService.findUser(this) { findSuccess ->
+                        if (findSuccess) finish()
+                        else errorToast()
                     }
                 } else errorToast()
             }

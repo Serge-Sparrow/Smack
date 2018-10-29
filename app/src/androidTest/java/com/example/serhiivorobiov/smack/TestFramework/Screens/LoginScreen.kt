@@ -5,9 +5,19 @@ import android.support.test.espresso.ViewInteraction
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.RootMatchers.withDecorView
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.rule.ActivityTestRule
+import com.example.serhiivorobiov.smack.Controller.MainActivity
 import com.example.serhiivorobiov.smack.R
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.INVALID_EMAIL
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.INVALID_PASSWORD
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
 
 class LoginScreen: BaseScreen() {
 
@@ -17,17 +27,37 @@ class LoginScreen: BaseScreen() {
     private val userEmail = onView(withId(R.id.login_email_text))
     private val userPass = onView(withId(R.id.login_password_text))
 
+    val toastValidation:ViewInteraction? = onView(
+        ViewMatchers.withText("Please, make sure email and/or password are filled in!")
+    )
+    val toastIllegalLogin:ViewInteraction? = onView(
+        ViewMatchers.withText("Something goes wrong, please try again.")
+    )
+
+    fun checkIsToastDisplayed( rule: ActivityTestRule<MainActivity>, toastType: ViewInteraction?) {
+        toastType?.inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
+            ?.check(matches(isDisplayed()))
+    }
     init {
         uniqueView.check(matches(isDisplayed()))
     }
 
     fun clickOnLogInButton(validLog: Int): BaseScreen {
         return when (validLog) {
+            2 -> {
+                setUserEmail(INVALID_EMAIL)
+                setUserPassword(INVALID_PASSWORD)
+                loginButton.perform(click())
+                this
+            }
             1 -> {
+                setUserEmail(VALID_EMAIL)
+                setUserPassword(VALID_PASSWORD)
                 loginButton.perform(click())
                 ChannelScreen()
             }
             else -> {
+                setUserEmail(VALID_EMAIL)
                 loginButton.perform(click())
                  this
             }
@@ -39,12 +69,12 @@ class LoginScreen: BaseScreen() {
         return CreateUserScreen()
     }
 
-    fun setUserEmail(email: String) {
+    private fun setUserEmail(email: String) {
 
         userEmail.perform(replaceText(email))
     }
 
-    fun setUserPAssword(password: String) {
+    private fun setUserPassword(password: String) {
 
         userPass.perform(replaceText(password))
     }
