@@ -11,8 +11,10 @@ object UserDataService {
     var avatarName = ""
     var name = ""
     var email = ""
+    var avatarResId = 0
 
     fun logout() {
+        avatarResId = 0
         id = ""
         avatarColor = ""
         avatarName = ""

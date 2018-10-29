@@ -36,7 +36,6 @@ import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity() {
-//    private val counting = CountingIdlingResource("")
 
     var selectedChannel: Channel? = null
     lateinit var channelAdapter: ArrayAdapter<Channel>
@@ -108,6 +107,10 @@ class MainActivity : AppCompatActivity() {
         setUpAdapter()
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciever, IntentFilter(
             BROADCAST_USER_DATA_CHANGE))
+    }
+
+    override fun onStart() {
+        super.onStart()
         if (App.prefs.isLoggedIn) {
             findUserByEmailService.findUser(this) {}
             channel_list.setOnItemClickListener { _, _, position, _ ->

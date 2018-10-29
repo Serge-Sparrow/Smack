@@ -1,5 +1,6 @@
 package com.example.serhiivorobiov.smack.Services
 
+import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -8,18 +9,23 @@ import com.example.serhiivorobiov.smack.Utilities.URL_DELETE_USER
 import org.json.JSONObject
 
 object DeleteUserService {
-
+val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
     fun deleteUser(name: String, id: String, complete: (Boolean) -> Unit) {
         val url = "$URL_DELETE_USER$id"
 
         val jsonBody = JSONObject()
         jsonBody.put("name", name)
         val requestBody = jsonBody.toString()
-
+        deleteUserIR.increment()
         val deleteUserRequest = object : StringRequest(
             Method.DELETE, url,
             Response.Listener { _ ->
+                try{
               complete(true)
+                }
+                finally {
+                    deleteUserIR.decrement()
+                }
             },
             Response.ErrorListener { error -> Log.d("ERROR", "Could not delete user: $error")
             }) {

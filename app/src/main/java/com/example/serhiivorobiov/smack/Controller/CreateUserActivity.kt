@@ -11,6 +11,7 @@ import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.AddUserService
 import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.LoginService
+import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import kotlinx.android.synthetic.main.activity_create_user.*
 import java.util.Random
@@ -37,8 +38,8 @@ class CreateUserActivity : AppCompatActivity() {
         } else {
             userAvatar = "dark$image"
         }
-val resourceId = resources.getIdentifier(userAvatar, "drawable", packageName)
-
+        val resourceId = resources.getIdentifier(userAvatar, "drawable", packageName)
+        UserDataService.avatarResId = resourceId
         create_act_avatar_view.setImageResource(resourceId)
     }
 

@@ -5,6 +5,8 @@ import android.support.test.espresso.ViewAction
 import android.support.test.espresso.matcher.ViewMatchers
 import android.view.View
 import android.widget.TextView
+import com.example.serhiivorobiov.smack.TestFramework.Screens.ChatScreen
+import com.example.serhiivorobiov.smack.TestFramework.Screens.LoginScreen
 import org.hamcrest.Matcher
 import java.util.concurrent.atomic.AtomicReference
 
