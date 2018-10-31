@@ -38,25 +38,6 @@ class CreateUserTests {
         IdlingRegistry.getInstance().register(DeleteUserService.deleteUserIR)
     }
 
-    @After
-    fun deleteCreatedUser() {
-        val userName = UserDataService.name
-        val userId = UserDataService.id
-        if (UserDataService.id != "") {
-            DeleteUserService.deleteUser(userName, userId) { _ ->
-            }
-        }
-        IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
-        IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
-    }
-
-    @After
-    fun logout() {
-        UserDataService.logout()
-    }
-
     @Test
     fun createUserUsingExistingAccount() {
 
@@ -99,4 +80,24 @@ class CreateUserTests {
         createUserScreen.onClickCreateUserButton(CREATE_USER_ERROR_HANDLING)
         createUserScreen.checkIsToastDisplayed(mActivityTestRule)
     }
+
+    @After
+    fun deleteCreatedUser() {
+        val userName = UserDataService.name
+        val userId = UserDataService.id
+        if (UserDataService.id != "") {
+            DeleteUserService.deleteUser(userName, userId) { _ ->
+            }
+        }
+        IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
+        IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
+        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
+        IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
+    }
+
+    @After
+    fun logout() {
+        UserDataService.logout()
+    }
+
 }

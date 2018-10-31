@@ -32,17 +32,6 @@ class ChatTests {
         IdlingRegistry.getInstance().register(FindUserByEmailService.findUserByEmailIR)
     }
 
-    @After
-    fun afterEachTest() {
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
-    }
-
-    @After
-    fun logout() {
-        UserDataService.logout()
-    }
-
     @Test
     fun sendMessageInFirstChannel() {
         val chatScreen = ChatScreen()
@@ -87,13 +76,24 @@ fun checkSentMessageReceivedByAnotherUser() {
     }
 
     @Test
-fun checkIfMessagesInCouldBeScrolled() {
+    fun checkIfMessagesInCouldBeScrolled() {
         val chatScreen = ChatScreen()
         val channelScreen = chatScreen.onBurgerClick()
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         loginScreen.clickOnLogInButton(VALID_LOGIN, VALID_EMAIL, VALID_PASSWORD)
         channelScreen.clickOnChannel(0)
         chatScreen.scrollMessages()
+    }
+
+    @After
+    fun afterEachTest() {
+        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
+        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
+    }
+
+    @After
+    fun logout() {
+        UserDataService.logout()
     }
 
 }

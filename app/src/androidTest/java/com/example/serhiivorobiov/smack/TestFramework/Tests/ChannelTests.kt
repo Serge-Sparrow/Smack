@@ -30,17 +30,6 @@ class ChannelTests {
         IdlingRegistry.getInstance().register(FindUserByEmailService.findUserByEmailIR)
     }
 
-    @After
-    fun afterEachTest() {
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
-    }
-
-    @After
-    fun logout() {
-        UserDataService.logout()
-    }
-
     @Test
     fun checkIsToastDisplayedIfNotLoginAndClickNewChannelBtn() {
 
@@ -77,5 +66,16 @@ class ChannelTests {
         loginScreen.clickOnLogInButton(VALID_LOGIN, VALID_EMAIL, VALID_PASSWORD)
         channelScreen.clickOnChannel(channelScreen.lastChannel())
         chatScreen.checkChannelNameHeader(channelScreen.channelNameHolder)
+    }
+
+    @After
+    fun afterEachTest() {
+        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
+        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
+    }
+
+    @After
+    fun logout() {
+        UserDataService.logout()
     }
 }

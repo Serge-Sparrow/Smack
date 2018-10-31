@@ -44,17 +44,6 @@ class LoginTests {
         IdlingRegistry.getInstance().register(FindUserByEmailService.findUserByEmailIR)
     }
 
-    @After
-    fun deleteCreatedUser() {
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
-
-    }
-    @After
-    fun logoutExtra() {
-        UserDataService.logout()
-    }
-
     @Test
     fun checkIsToastDisplayedIfTryingToLoginInvalidUser() {
         val chatScreen = ChatScreen()
@@ -92,5 +81,16 @@ class LoginTests {
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         loginScreen.clickOnLogInButton(FAIL_LOGIN, VALID_EMAIL, null)
         loginScreen.checkIsToastDisplayed(mActivityTestRule,loginScreen.toastValidation)
+    }
+
+    @After
+    fun deleteCreatedUser() {
+        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
+        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
+
+    }
+    @After
+    fun logoutExtra() {
+        UserDataService.logout()
     }
 }
