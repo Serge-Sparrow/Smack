@@ -19,7 +19,7 @@ object MessageService {
     fun getChannels(complete: (Boolean) -> Unit) {
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null,
             Listener { response ->
-            clearCannels()
+            clearChannels()
         try {
             for (x in 0 until response.length()) {
                 val channel = response.getJSONObject(x)
@@ -102,7 +102,7 @@ object MessageService {
         messages.clear()
     }
 
-    fun clearCannels() {
+    fun clearChannels() {
         channels.clear()
     }
 }

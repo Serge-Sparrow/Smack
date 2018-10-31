@@ -26,7 +26,7 @@ class LoginScreen: BaseScreen() {
     private val loginButton = onView(withId(R.id.log_act_login_btn))
     private val userEmail = onView(withId(R.id.login_email_text))
     private val userPass = onView(withId(R.id.login_password_text))
-
+    val progressBar = onView(withId(R.id.login_spinner))
     val toastValidation:ViewInteraction? = onView(
         ViewMatchers.withText("Please, make sure email and/or password are filled in!")
     )
@@ -42,22 +42,22 @@ class LoginScreen: BaseScreen() {
         uniqueView.check(matches(isDisplayed()))
     }
 
-    fun clickOnLogInButton(validLog: Int): BaseScreen {
+    fun clickOnLogInButton(validLog: Int, email: String, password: String?): BaseScreen {
         return when (validLog) {
             2 -> {
-                setUserEmail(INVALID_EMAIL)
-                setUserPassword(INVALID_PASSWORD)
+                setUserEmail(email)
+                setUserPassword(password!!)
                 loginButton.perform(click())
                 this
             }
             1 -> {
-                setUserEmail(VALID_EMAIL)
-                setUserPassword(VALID_PASSWORD)
+                setUserEmail(email)
+                setUserPassword(password!!)
                 loginButton.perform(click())
                 ChannelScreen()
             }
             else -> {
-                setUserEmail(VALID_EMAIL)
+                setUserEmail(email)
                 loginButton.perform(click())
                  this
             }
@@ -65,6 +65,7 @@ class LoginScreen: BaseScreen() {
     }
 
     fun clickOnSignUpButton(): CreateUserScreen {
+
         signUpButton.perform(click())
         return CreateUserScreen()
     }

@@ -21,6 +21,7 @@ import org.hamcrest.CoreMatchers.not
 import java.util.Random
 
 class CreateUserScreen : BaseScreen() {
+    private val ran = Random()
 
     override val uniqueView: ViewInteraction
         get() = onView(withId(R.id.create_user_btn))
@@ -76,15 +77,12 @@ class CreateUserScreen : BaseScreen() {
     }
 
    private fun randomSetUserEmail(): String {
-
-        val ran = Random()
         val char = 'a'
         fun randomChar(): Char = (ran.nextInt(26) + char.toInt()).toChar()
         return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}" + "@example.com")
     }
 
     private fun randomUserPassword(): String {
-        val ran = Random()
         return "${ran.nextInt(1000000000)}"
     }
 
@@ -107,12 +105,4 @@ class CreateUserScreen : BaseScreen() {
     init{
         uniqueView.check(matches(isDisplayed()))
     }
-
-    //    fun randomSetUserName(): String {
-//        val ran = Random()
-//        val char = 'a'
-//        fun randomChar() : Char = (ran.nextInt(26) + char.toInt()).toChar()
-//        return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}${randomChar()}")
-//    }
-
 }

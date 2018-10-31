@@ -31,8 +31,7 @@ class CreateUserTests {
     val mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
-    fun logout() {
-        UserDataService.logout()
+    fun registerIR() {
         IdlingRegistry.getInstance().register(AuthService.registerCountingIR)
         IdlingRegistry.getInstance().register(LoginService.loginCountingIdlingResource)
         IdlingRegistry.getInstance().register(AddUserService.userCountingIdlingResource)
@@ -51,6 +50,11 @@ class CreateUserTests {
         IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
         IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
         IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
+    }
+
+    @After
+    fun logout() {
+        UserDataService.logout()
     }
 
     @Test
@@ -95,5 +99,4 @@ class CreateUserTests {
         createUserScreen.onClickCreateUserButton(CREATE_USER_ERROR_HANDLING)
         createUserScreen.checkIsToastDisplayed(mActivityTestRule)
     }
-
 }

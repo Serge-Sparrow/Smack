@@ -5,12 +5,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.LoginService.userLogin
 import com.example.serhiivorobiov.smack.Services.FindUserByEmailService
 import kotlinx.android.synthetic.main.activity_login.*
+import java.lang.Thread.sleep
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         enableSpinner(true)
         val email = login_email_text.text.toString()
         val password = login_password_text.text.toString()
-
+        sleep(1000)
         if (email.isNotEmpty() && password.isNotEmpty()) {
             hideKeyboard()
             userLogin(email, password) { loginSuccess ->
@@ -49,12 +51,10 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-//    fun onCrashClicked(view: View): Unit = throw RuntimeException("This is a crash")
-
-    fun enableSpinner(enable: Boolean) {
+    private fun enableSpinner(enable: Boolean) {
 
         if (enable) {
-            login_spinner.visibility = View.VISIBLE
+           login_spinner.visibility = VISIBLE
         } else {
             login_spinner.visibility = View.INVISIBLE
         }
@@ -62,15 +62,16 @@ class LoginActivity : AppCompatActivity() {
         user_create_btn.isEnabled = !enable
     }
 
-    fun errorToast() {
+    private fun errorToast() {
         Toast.makeText(this, "Something goes wrong, please try again.", Toast.LENGTH_LONG).show()
         enableSpinner(false)
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (inputManager.isAcceptingText) {
             inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
     }
+    //    fun onCrashClicked(view: View): Unit = throw RuntimeException("This is a crash")
 }

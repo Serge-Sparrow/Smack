@@ -7,7 +7,11 @@ const val FAIL_LOGIN = 0
 const val VALID_LOGIN = 1
 const val VALID_EMAIL = "tester@example.com"
 const val VALID_PASSWORD = "12345"
+const val SECOND_VALID_EMAIL = "second_tester@example.com"
+const val SECOND_VALID_PASSWORD = "54321"
 const val VALID_USER_NAME = "Tester"
 const val INVALID_LOGIN = 2
 const val INVALID_EMAIL = "illegal@example.com"
 const val INVALID_PASSWORD = "illegal_pass"
+const val MESSAGE_TEXT ="This is test message # "
+

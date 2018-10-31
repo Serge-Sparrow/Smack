@@ -24,7 +24,7 @@ object UserDataService {
         App.prefs.userEmail = ""
         App.prefs.isLoggedIn = false
         MessageService.clearMessages()
-        MessageService.clearCannels()
+        MessageService.clearChannels()
     }
 
     fun returnAvatarColor(components: String): Int {

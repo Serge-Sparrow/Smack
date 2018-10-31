@@ -54,9 +54,10 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/login_spinner" android:layout_marginBottom="8dp"
+            android:id="@+id/login_spinner"
             app:layout_constraintBottom_toTopOf="@+id/text_login_screen" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
+            android:indeterminate="false"/>
     <Button
             android:text="Button"
             android:layout_width="wrap_content"
