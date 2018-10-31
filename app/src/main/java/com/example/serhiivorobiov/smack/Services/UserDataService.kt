@@ -1,9 +1,11 @@
 package com.example.serhiivorobiov.smack.Services
 
 import android.graphics.Color
+import android.support.annotation.VisibleForTesting
 import com.example.serhiivorobiov.smack.Controller.App
 import java.util.Scanner
 
+@VisibleForTesting
 object UserDataService {
 
     var id = ""
@@ -13,6 +15,7 @@ object UserDataService {
     var email = ""
     var avatarResId = 0
 
+    @VisibleForTesting
     fun logout() {
         avatarResId = 0
         id = ""

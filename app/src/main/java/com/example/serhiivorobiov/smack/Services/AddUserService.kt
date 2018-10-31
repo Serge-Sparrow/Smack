@@ -1,5 +1,6 @@
 package com.example.serhiivorobiov.smack.Services
 
+import android.support.annotation.VisibleForTesting
 import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
@@ -9,6 +10,7 @@ import com.example.serhiivorobiov.smack.Utilities.URL_ADD_USER
 import org.json.JSONException
 import org.json.JSONObject
 
+@VisibleForTesting
 object AddUserService {
     val userCountingIdlingResource = CountingIdlingResource("Create User IR",true)
 

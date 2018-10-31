@@ -2,6 +2,7 @@ package com.example.serhiivorobiov.smack.Services
 
 import android.content.Context
 import android.content.Intent
+import android.support.annotation.VisibleForTesting
 import android.support.test.espresso.idling.CountingIdlingResource
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
@@ -12,6 +13,7 @@ import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.URL_FIND_USER
 import org.json.JSONException
 
+@VisibleForTesting
 object FindUserByEmailService {
     val findUserByEmailIR = CountingIdlingResource("IR for find user by email request", true)
     fun findUser(context: Context, complete: (Boolean) -> Unit) {

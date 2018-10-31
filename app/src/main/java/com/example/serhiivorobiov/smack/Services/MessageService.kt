@@ -1,5 +1,6 @@
 package com.example.serhiivorobiov.smack.Services
 
+import android.support.annotation.VisibleForTesting
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.Response.Listener
@@ -11,9 +12,12 @@ import com.example.serhiivorobiov.smack.Utilities.URL_GET_CHANNELS
 import com.example.serhiivorobiov.smack.Utilities.URL_GET_MESSAGES
 import org.json.JSONException
 
+@VisibleForTesting
 object MessageService {
 
+    @VisibleForTesting
     val channels = ArrayList<Channel>()
+    @VisibleForTesting
     val messages = ArrayList<Message>()
 
     fun getChannels(complete: (Boolean) -> Unit) {

@@ -1,6 +1,7 @@
 package com.example.serhiivorobiov.smack.Adapters
 
 import android.content.Context
+import android.support.annotation.VisibleForTesting
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
+@VisibleForTesting
 class MessageAdapter(val context: Context, val messages: ArrayList<Message>) : RecyclerView
                     .Adapter<MessageAdapter.ViewHolder>() {
 

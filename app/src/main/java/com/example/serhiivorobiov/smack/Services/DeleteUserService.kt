@@ -1,5 +1,6 @@
 package com.example.serhiivorobiov.smack.Services
 
+import android.support.annotation.VisibleForTesting
 import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
@@ -8,6 +9,7 @@ import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_DELETE_USER
 import org.json.JSONObject
 
+@VisibleForTesting
 object DeleteUserService {
 val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
     fun deleteUser(name: String, id: String, complete: (Boolean) -> Unit) {
