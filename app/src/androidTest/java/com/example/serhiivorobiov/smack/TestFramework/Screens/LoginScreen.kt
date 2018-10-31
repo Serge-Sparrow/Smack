@@ -9,17 +9,16 @@ import android.support.test.espresso.matcher.RootMatchers.withDecorView
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
 import com.example.serhiivorobiov.smack.Controller.MainActivity
 import com.example.serhiivorobiov.smack.R
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.INVALID_EMAIL
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.INVALID_PASSWORD
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.getTextHint
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
+import java.util.concurrent.atomic.AtomicReference
 
-class LoginScreen: BaseScreen() {
+class LoginScreen : BaseScreen() {
 
     override val uniqueView: ViewInteraction = onView(withId(R.id.text_login_screen))
     private val signUpButton = onView(withId(R.id.user_create_btn))
@@ -27,20 +26,34 @@ class LoginScreen: BaseScreen() {
     private val userEmail = onView(withId(R.id.login_email_text))
     private val userPass = onView(withId(R.id.login_password_text))
     val progressBar = onView(withId(R.id.login_spinner))
-    val toastValidation:ViewInteraction? = onView(
+    val toastValidation: ViewInteraction? = onView(
         ViewMatchers.withText("Please, make sure email and/or password are filled in!")
     )
-    val toastIllegalLogin:ViewInteraction? = onView(
-        ViewMatchers.withText("Something goes wrong, please try again.")
+    val toastIllegalLogin: ViewInteraction? = onView(
+        withText("Something goes wrong, please try again.")
     )
 
-    fun checkIsToastDisplayed( rule: ActivityTestRule<MainActivity>, toastType: ViewInteraction?) {
+    fun checkIsToastDisplayed(rule: ActivityTestRule<MainActivity>, toastType: ViewInteraction?) {
         toastType?.inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
             ?.check(matches(isDisplayed()))
     }
     init {
         uniqueView.check(matches(isDisplayed()))
     }
+
+    val emailHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            userEmail.perform(getTextHint(holder))
+            return holder.get()
+        }
+
+    val passwordHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            userPass.perform(getTextHint(holder))
+            return holder.get()
+        }
 
     fun clickOnLogInButton(validLog: Int, email: String, password: String?): BaseScreen {
         return when (validLog) {
@@ -59,7 +72,7 @@ class LoginScreen: BaseScreen() {
             else -> {
                 setUserEmail(email)
                 loginButton.perform(click())
-                 this
+                this
             }
         }
     }

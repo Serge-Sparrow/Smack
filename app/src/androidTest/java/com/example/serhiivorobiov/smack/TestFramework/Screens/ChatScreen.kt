@@ -15,14 +15,17 @@ import com.example.serhiivorobiov.smack.Adapters.MessageAdapter
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.MESSAGE_TEXT
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.getTextHint
 import org.hamcrest.CoreMatchers.allOf
+import java.lang.Thread.sleep
+import java.util.concurrent.atomic.AtomicReference
 
 class ChatScreen : BaseScreen() {
 
     override val uniqueView: ViewInteraction
         get() = onView(withContentDescription("Open navigation drawer"))
 
-    private val message = onView(withId(R.id.message_text_field))!!
+    val message = onView(withId(R.id.message_text_field))!!
     private val messageSendBtn = onView(withId(R.id.send_image_btn))
     val messagesInChannel = onView(withId(R.id.message_list_view))
     private var messageBodyHolder = ""
@@ -30,6 +33,13 @@ class ChatScreen : BaseScreen() {
     fun clickOnMessageSendBtn() {
         messageSendBtn.perform(click())
     }
+
+    val messageHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            message.perform(getTextHint(holder))
+            return holder.get()
+        }
 
     fun onBurgerClick(): ChannelScreen {
 
@@ -62,12 +72,14 @@ class ChatScreen : BaseScreen() {
 
     fun scrollMessages() {
 
-        for ( message in MessageService.messages.size - 1 downTo 0) {
+        for (message in MessageService.messages.size - 1 downTo 0) {
+            sleep(500)
             messagesInChannel.perform(RecyclerViewActions
                 .scrollToPosition<MessageAdapter.ViewHolder>(message))
         }
 
-        for ( message in 0 until MessageService.messages.size) {
+        for (message in 0 until MessageService.messages.size) {
+            sleep(500)
             messagesInChannel.perform(RecyclerViewActions
                 .scrollToPosition<MessageAdapter.ViewHolder>(message))
         }

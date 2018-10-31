@@ -13,5 +13,8 @@ const val VALID_USER_NAME = "Tester"
 const val INVALID_LOGIN = 2
 const val INVALID_EMAIL = "illegal@example.com"
 const val INVALID_PASSWORD = "illegal_pass"
-const val MESSAGE_TEXT ="This is test message # "
-
+const val MESSAGE_TEXT = "This is test message # "
+const val MESSAGE_HINT = "message:"
+const val EMAIL_HINT = "email"
+const val PASSWORD_HINT = "password"
+const val USER_NAME_HINT = "user name"

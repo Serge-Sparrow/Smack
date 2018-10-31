@@ -10,9 +10,9 @@ import com.example.serhiivorobiov.smack.Utilities.URL_ADD_USER
 import org.json.JSONException
 import org.json.JSONObject
 
-@VisibleForTesting
 object AddUserService {
-    val userCountingIdlingResource = CountingIdlingResource("Create User IR",true)
+
+    val userCountingIdlingResource = CountingIdlingResource("Create User IR", true)
 
 fun createUser(name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit) {
     val jsonBody = JSONObject()
@@ -36,13 +36,13 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
             } catch (e: JSONException) {
                 Log.d("JSON", "EXC" + e.localizedMessage)
                 complete(false)
-            }finally {
+            } finally {
                 userCountingIdlingResource.decrement()
             }
         },
-        Response.ErrorListener { error -> try {Log.d("ERROR", "Could not add user: $error")
-        complete(false)}
-        finally {
+        Response.ErrorListener { error -> try { Log.d("ERROR", "Could not add user: $error")
+        complete(false)
+        } finally {
             userCountingIdlingResource.decrement()
         }
         }) {

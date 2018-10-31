@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
     private fun enableSpinner(enable: Boolean) {
 
         if (enable) {
-           login_spinner.visibility = VISIBLE
+            login_spinner.visibility = VISIBLE
         } else {
             login_spinner.visibility = View.INVISIBLE
         }

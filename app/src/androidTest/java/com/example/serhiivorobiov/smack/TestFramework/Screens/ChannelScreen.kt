@@ -6,12 +6,14 @@ import android.support.test.espresso.ViewInteraction
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
 import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.contrib.DrawerActions.open
 import android.support.test.espresso.matcher.RootMatchers
 import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
+import android.view.Gravity.START
 import com.example.serhiivorobiov.smack.Controller.MainActivity
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.MessageService
@@ -21,9 +23,9 @@ import org.hamcrest.CoreMatchers.anything
 import java.util.Random
 import java.util.concurrent.atomic.AtomicReference
 
-class ChannelScreen: BaseScreen() {
+class ChannelScreen : BaseScreen() {
     private val ran = Random()
-     var channelNameHolder: String = ""
+    var channelNameHolder: String = ""
 
     override val uniqueView: ViewInteraction
         get() = onView(withId(R.id.add_channel_btn))
@@ -34,7 +36,10 @@ class ChannelScreen: BaseScreen() {
     private val addChannelName = onView(withId(R.id.add_channel_name))
     private val addChannelDescriptions = onView(withId(R.id.add_channel_disc))
     private val addBtn = onView(withText("Add"))
-    private val toast:ViewInteraction? = onView(ViewMatchers.withText("Please Login!"))
+    private val toast: ViewInteraction? = onView(ViewMatchers.withText("Please Login!"))
+    private val message = onView(withId(R.id.message_text_field))!!
+    private val messageSendBtn = onView(withId(R.id.send_image_btn))
+    private val openDrawer = onView(withId(R.id.drawer_layout))
 
     var lastChannel = fun (): Int {
         return if (MessageService.channels.size > 0) {
@@ -42,7 +47,7 @@ class ChannelScreen: BaseScreen() {
         } else 0
     }
 
-    fun checkIsToastDisplayed( rule: ActivityTestRule<MainActivity>) {
+    fun checkIsToastDisplayed(rule: ActivityTestRule<MainActivity>) {
         toast?.inRoot(RootMatchers.withDecorView(CoreMatchers.not(CoreMatchers.`is`(rule.activity.window.decorView))))
             ?.check(matches(isDisplayed()))
     }
@@ -70,7 +75,7 @@ class ChannelScreen: BaseScreen() {
 
     fun onLoginBtnClick(): BaseScreen {
 
-       return when (loginBtnText) {
+        return when (loginBtnText) {
 
             "Login" -> {
                 loginBtn.perform(click())
@@ -78,18 +83,18 @@ class ChannelScreen: BaseScreen() {
             }
             else -> {
                 loginBtn.perform(click())
-                 this
+                this
             }
         }
     }
 
     fun clickOnAddChannelBtn() {
 
-       uniqueView.perform(click())
+        uniqueView.perform(click())
     }
 
     fun addNewChannel() {
-        channelNameHolder = "TestChannel- ${MessageService.channels.size+1}"
+        channelNameHolder = "TestChannel- ${MessageService.channels.size + 1}"
         uniqueView.perform(click())
         addChannelName.perform(replaceText(channelNameHolder))
         addChannelDescriptions.perform(replaceText("Channel for testing"))
@@ -100,6 +105,15 @@ class ChannelScreen: BaseScreen() {
         onData(anything()).inAdapterView(withId(R.id.channel_list))
             .atPosition(position)
             .perform(click())
+    }
+
+    fun clickOnEveryChannel() {
+        for (channel in 0 until MessageService.channels.size) {
+            clickOnChannel(channel)
+            message.perform(replaceText("Hello =)"))
+            messageSendBtn.perform(click())
+            openDrawer.perform(open(START))
+        }
     }
 
     init {

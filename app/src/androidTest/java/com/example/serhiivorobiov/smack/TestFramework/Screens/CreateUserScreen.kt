@@ -16,9 +16,11 @@ import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_USER_NAME
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.getTextHint
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
 import java.util.Random
+import java.util.concurrent.atomic.AtomicReference
 
 class CreateUserScreen : BaseScreen() {
     private val ran = Random()
@@ -27,23 +29,44 @@ class CreateUserScreen : BaseScreen() {
         get() = onView(withId(R.id.create_user_btn))
 
     private val userName = onView(withId(R.id.create_act_user_name_text))
-    private val userEmail  = onView(withId(R.id.create_act_email_text))
-    private val userPass  = onView(withId(R.id.create_act_password_text))
+    private val userEmail = onView(withId(R.id.create_act_email_text))
+    private val userPass = onView(withId(R.id.create_act_password_text))
     private val avatar: ViewInteraction? = onView(withId(R.id.create_act_avatar_view))
     private val backgroundColor = onView(withId(R.id.background_color_btn))
 
-    private val toast:ViewInteraction? = onView(
+    private val toast: ViewInteraction? = onView(
         withText("Please, make sure user name, email and/or password are filled in")
         )
 
-    fun checkIsToastDisplayed( rule: ActivityTestRule<MainActivity>) {
+    val emailHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            userEmail.perform(getTextHint(holder))
+            return holder.get()
+        }
+
+    val passwordHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            userPass.perform(getTextHint(holder))
+            return holder.get()
+        }
+
+    val userNameHint: String
+        get() {
+            val holder = AtomicReference<String>()
+            userName.perform(getTextHint(holder))
+            return holder.get()
+        }
+
+    fun checkIsToastDisplayed(rule: ActivityTestRule<MainActivity>) {
         toast?.inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
             ?.check(matches(isDisplayed()))
     }
 
     fun onClickCreateUserButton(typeOfCreation: Int): BaseScreen {
         return when (typeOfCreation) {
-            //Create user and account
+            // Create user and account
             2 -> {
                 setAllTextFields(VALID_USER_NAME, randomSetUserEmail(), randomUserPassword())
                 onClickBackground()
@@ -52,7 +75,7 @@ class CreateUserScreen : BaseScreen() {
                 uniqueView.perform(click())
                 ChannelScreen()
             }
-            //Create user using existing account
+            // Create user using existing account
             1 -> {
                 setAllTextFields(VALID_USER_NAME, VALID_EMAIL, VALID_PASSWORD)
                 onClickBackground()
@@ -65,18 +88,17 @@ class CreateUserScreen : BaseScreen() {
             else -> {
                 uniqueView.perform(click())
                 UserDataService.id = ""
-                setAllTextFields(VALID_USER_NAME,null, null)
+                setAllTextFields(VALID_USER_NAME, null, null)
                 this
             }
         }
     }
 
-   private fun onClickBackground() {
-
+    private fun onClickBackground() {
         backgroundColor.perform(click())
     }
 
-   private fun randomSetUserEmail(): String {
+    private fun randomSetUserEmail(): String {
         val char = 'a'
         fun randomChar(): Char = (ran.nextInt(26) + char.toInt()).toChar()
         return ("${randomChar()}${randomChar()}${randomChar()}${randomChar()}" + "@example.com")
@@ -86,9 +108,9 @@ class CreateUserScreen : BaseScreen() {
         return "${ran.nextInt(1000000000)}"
     }
 
-   private fun clickOnAvatarImage() {
-       avatar?.perform(click())
-    }
+    private fun clickOnAvatarImage() {
+        avatar?.perform(click())
+        }
 
     private fun setAllTextFields(name: String?, email: String?, pass: String?) {
         if (name != null) {
@@ -102,7 +124,7 @@ class CreateUserScreen : BaseScreen() {
         }
     }
 
-    init{
+    init {
         uniqueView.check(matches(isDisplayed()))
     }
 }

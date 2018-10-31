@@ -22,10 +22,9 @@ val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
         val deleteUserRequest = object : StringRequest(
             Method.DELETE, url,
             Response.Listener { _ ->
-                try{
-              complete(true)
-                }
-                finally {
+                try {
+                    complete(true)
+                } finally {
                     deleteUserIR.decrement()
                 }
             },
@@ -48,20 +47,3 @@ val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
         App.prefs.requestQueue.add(deleteUserRequest)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

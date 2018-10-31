@@ -12,7 +12,6 @@ import com.example.serhiivorobiov.smack.Utilities.URL_GET_CHANNELS
 import com.example.serhiivorobiov.smack.Utilities.URL_GET_MESSAGES
 import org.json.JSONException
 
-@VisibleForTesting
 object MessageService {
 
     @VisibleForTesting

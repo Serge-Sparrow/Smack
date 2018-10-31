@@ -1,6 +1,7 @@
 package com.example.serhiivorobiov.smack.TestFramework.Tests
 
 import android.support.test.espresso.IdlingRegistry
+import android.support.test.espresso.matcher.ViewMatchers.assertThat
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.example.serhiivorobiov.smack.Controller.MainActivity
@@ -9,11 +10,13 @@ import com.example.serhiivorobiov.smack.Services.LoginService
 import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.TestFramework.Screens.ChatScreen
 import com.example.serhiivorobiov.smack.TestFramework.Screens.LoginScreen
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.MESSAGE_HINT
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.SECOND_VALID_EMAIL
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.SECOND_VALID_PASSWORD
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_LOGIN
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -42,7 +45,6 @@ class ChatTests {
         chatScreen.createNewMessage()
         chatScreen.clickOnMessageSendBtn()
         chatScreen.checkMessageIsDisplayed()
-
     }
 
     @Test
@@ -85,6 +87,22 @@ fun checkSentMessageReceivedByAnotherUser() {
         chatScreen.scrollMessages()
     }
 
+    @Test
+    fun sayHelloInEveryChannel() {
+        val chatScreen = ChatScreen()
+        val channelScreen = chatScreen.onBurgerClick()
+        val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
+        loginScreen.clickOnLogInButton(VALID_LOGIN, VALID_EMAIL, VALID_PASSWORD)
+        channelScreen.clickOnEveryChannel()
+    }
+
+    @Test
+    fun checkIsMessageTextHintIsCorrect() {
+
+        val chatScreen = ChatScreen()
+        assertThat(chatScreen.messageHint, equalTo(MESSAGE_HINT))
+    }
+
     @After
     fun afterEachTest() {
         IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
@@ -95,5 +113,4 @@ fun checkSentMessageReceivedByAnotherUser() {
     fun logout() {
         UserDataService.logout()
     }
-
 }

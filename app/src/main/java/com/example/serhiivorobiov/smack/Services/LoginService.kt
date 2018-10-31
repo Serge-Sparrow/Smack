@@ -10,9 +10,8 @@ import com.example.serhiivorobiov.smack.Utilities.URL_LOGIN
 import org.json.JSONException
 import org.json.JSONObject
 
-@VisibleForTesting
 object LoginService {
-    val loginCountingIdlingResource = CountingIdlingResource("Idling for Login request",true)
+    val loginCountingIdlingResource = CountingIdlingResource("Idling for Login request", true)
 
     fun userLogin(email: String, password: String, complete: (Boolean) -> Unit) {
 
@@ -35,7 +34,7 @@ val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN, null,
         } catch (e: JSONException) {
             Log.d("JSON", "EXC" + e.localizedMessage)
             complete(false)
-        }finally {
+        } finally {
             loginCountingIdlingResource.dumpStateToLogs()
             loginCountingIdlingResource.decrement()
         }
@@ -44,7 +43,7 @@ val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN, null,
         Log.d("ERROR", "Could not login user: $error")
         try {
             complete(false)
-        }finally {
+        } finally {
             loginCountingIdlingResource.decrement()
         }
     }) {
@@ -55,9 +54,7 @@ val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN, null,
     override fun getBody(): ByteArray {
         return requestBody.toByteArray()
     }
-
 }
         App.prefs.requestQueue.add(loginRequest)
-
     }
 }

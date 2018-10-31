@@ -13,7 +13,6 @@ import com.example.serhiivorobiov.smack.Utilities.BROADCAST_USER_DATA_CHANGE
 import com.example.serhiivorobiov.smack.Utilities.URL_FIND_USER
 import org.json.JSONException
 
-@VisibleForTesting
 object FindUserByEmailService {
     val findUserByEmailIR = CountingIdlingResource("IR for find user by email request", true)
     fun findUser(context: Context, complete: (Boolean) -> Unit) {
@@ -35,17 +34,17 @@ object FindUserByEmailService {
                 } catch (e: JSONException) {
                     Log.d("JSON", "EXC: " + e.localizedMessage)
                     complete(false)
-                }finally {
+                } finally {
                     findUserByEmailIR.decrement()
                 }
             },
             Response.ErrorListener { _ ->
-              try {
-                  Log.d("ERROR", "Could not find the user.")
-                  complete(false)
-              } finally {
-                  findUserByEmailIR.decrement()
-              }
+                try {
+                    Log.d("ERROR", "Could not find the user.")
+                    complete(false)
+                } finally {
+                    findUserByEmailIR.decrement()
+                }
             }) {
 
             override fun getBodyContentType(): String {
