@@ -122,10 +122,10 @@ class CreateUserTests {
             DeleteUserService.deleteUser(userName, userId) { _ ->
             }
         }
-        UserDataService.logout()
         IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
         IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
         IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
         IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
+        UserDataService.logout()
     }
 }
