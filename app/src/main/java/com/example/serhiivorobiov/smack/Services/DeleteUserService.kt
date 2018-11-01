@@ -1,6 +1,5 @@
 package com.example.serhiivorobiov.smack.Services
 
-import android.support.annotation.VisibleForTesting
 import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
@@ -9,11 +8,9 @@ import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_DELETE_USER
 import org.json.JSONObject
 
-@VisibleForTesting
 object DeleteUserService {
 val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
 
-    @VisibleForTesting
     fun deleteUser(name: String, id: String, complete: (Boolean) -> Unit) {
         val url = "$URL_DELETE_USER$id"
 
@@ -30,7 +27,13 @@ val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
                     deleteUserIR.decrement()
                 }
             },
-            Response.ErrorListener { error -> Log.d("ERROR", "Could not delete user: $error")
+            Response.ErrorListener { error ->
+                try {
+                    Log.d("ERROR", "Could not delete user: $error")
+                    complete(false)
+                } finally {
+                    deleteUserIR.decrement()
+                }
             }) {
             override fun getBodyContentType(): String {
                 return "application/json; charset = utf-8"

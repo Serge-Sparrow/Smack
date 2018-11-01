@@ -10,6 +10,7 @@ import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.DeleteUserService
 import com.example.serhiivorobiov.smack.Services.LoginService
 import com.example.serhiivorobiov.smack.Services.UserDataService
+import com.example.serhiivorobiov.smack.Services.UserDataService.id
 import com.example.serhiivorobiov.smack.TestFramework.Screens.ChatScreen
 import com.example.serhiivorobiov.smack.TestFramework.Screens.LoginScreen
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.CREATE_USER_ERROR_HANDLING
@@ -26,6 +27,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4::class)
 class CreateUserTests {
@@ -39,6 +41,25 @@ class CreateUserTests {
         IdlingRegistry.getInstance().register(LoginService.loginCountingIdlingResource)
         IdlingRegistry.getInstance().register(AddUserService.userCountingIdlingResource)
         IdlingRegistry.getInstance().register(DeleteUserService.deleteUserIR)
+    }
+
+    @Before
+    fun logout() {
+        UserDataService.logout()
+    }
+
+    @After
+    fun deleteCreatedUser() {
+        val userName = UserDataService.name
+        val userId = id
+        if (userId != "") {
+            DeleteUserService.deleteUser(userName, userId) { _ ->
+            }
+        }
+        IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
+        IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
+        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
+        IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
     }
 
     @Test
@@ -112,20 +133,5 @@ class CreateUserTests {
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         val createUserScreen = loginScreen.clickOnSignUpButton()
         assertThat(createUserScreen.userNameHint, equalTo(USER_NAME_HINT))
-    }
-
-    @After
-    fun deleteCreatedUser() {
-        val userName = UserDataService.name
-        val userId = UserDataService.id
-        if (UserDataService.id != "") {
-            DeleteUserService.deleteUser(userName, userId) { _ ->
-            }
-        }
-        IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
-        IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
-        UserDataService.logout()
     }
 }

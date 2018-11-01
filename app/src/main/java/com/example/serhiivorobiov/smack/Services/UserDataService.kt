@@ -11,9 +11,8 @@ object UserDataService {
     var id = ""
     var avatarColor = ""
     var avatarName = ""
-
-    @VisibleForTesting
     var name = ""
+    @VisibleForTesting
     var email = ""
     var avatarResId = 0
 

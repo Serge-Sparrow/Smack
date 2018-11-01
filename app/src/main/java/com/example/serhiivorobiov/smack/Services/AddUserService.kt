@@ -20,6 +20,7 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
     jsonBody.put("avatarName", avatarName)
     jsonBody.put("avatarColor", avatarColor)
     val requestBody = jsonBody.toString()
+
     userCountingIdlingResource.increment()
     val createUserRequest = object : JsonObjectRequest(
         Method.POST, URL_ADD_USER, null,
@@ -30,7 +31,6 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
                 UserDataService.avatarName = response.getString("avatarName")
                 UserDataService.avatarColor = response.getString("avatarColor")
                 UserDataService.id = response.getString("_id")
-                println("OOOOOOOOOOOOOOOKKKKKKKKK")
                 complete(true)
             } catch (e: JSONException) {
                 Log.d("JSON", "EXC" + e.localizedMessage)
@@ -39,8 +39,10 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
                 userCountingIdlingResource.decrement()
             }
         },
-        Response.ErrorListener { error -> try { Log.d("ERROR", "Could not add user: $error")
-        complete(false)
+        Response.ErrorListener { error ->
+            try {
+                Log.d("ERROR", "Could not add user: $error")
+                complete(false)
         } finally {
             userCountingIdlingResource.decrement()
         }
