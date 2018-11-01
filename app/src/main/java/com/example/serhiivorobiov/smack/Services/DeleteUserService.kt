@@ -9,6 +9,7 @@ import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Utilities.URL_DELETE_USER
 import org.json.JSONObject
 
+@VisibleForTesting
 object DeleteUserService {
 val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
 
