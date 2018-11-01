@@ -5,12 +5,14 @@ import android.support.annotation.VisibleForTesting
 import com.example.serhiivorobiov.smack.Controller.App
 import java.util.Scanner
 
-@VisibleForTesting
 object UserDataService {
 
+    @VisibleForTesting
     var id = ""
     var avatarColor = ""
     var avatarName = ""
+
+    @VisibleForTesting
     var name = ""
     var email = ""
     var avatarResId = 0
