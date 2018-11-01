@@ -93,7 +93,7 @@ fun checkSentMessageReceivedByAnotherUser() {
         val channelScreen = chatScreen.onBurgerClick()
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         loginScreen.clickOnLogInButton(VALID_LOGIN, VALID_EMAIL, VALID_PASSWORD)
-        channelScreen.clickOnEveryChannel()
+        channelScreen.clickOnEveryChannelAndTypeHello()
     }
 
     @Test

@@ -17,7 +17,6 @@ import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.MESSAGE_TEXT
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.getTextHint
 import org.hamcrest.CoreMatchers.allOf
-import java.lang.Thread.sleep
 import java.util.concurrent.atomic.AtomicReference
 
 class ChatScreen : BaseScreen() {
@@ -71,17 +70,20 @@ class ChatScreen : BaseScreen() {
     }
 
     fun scrollMessages() {
+        if (MessageService.messages.size > 1) {
+            for (message in MessageService.messages.size - 1 downTo 0) {
+                messagesInChannel.perform(
+                    RecyclerViewActions
+                        .scrollToPosition<MessageAdapter.ViewHolder>(message)
+                )
+            }
 
-        for (message in MessageService.messages.size - 1 downTo 0) {
-            sleep(500)
-            messagesInChannel.perform(RecyclerViewActions
-                .scrollToPosition<MessageAdapter.ViewHolder>(message))
-        }
-
-        for (message in 0 until MessageService.messages.size) {
-            sleep(500)
-            messagesInChannel.perform(RecyclerViewActions
-                .scrollToPosition<MessageAdapter.ViewHolder>(message))
+            for (message in 0 until MessageService.messages.size) {
+                messagesInChannel.perform(
+                    RecyclerViewActions
+                        .scrollToPosition<MessageAdapter.ViewHolder>(message)
+                )
+            }
         }
     }
 }

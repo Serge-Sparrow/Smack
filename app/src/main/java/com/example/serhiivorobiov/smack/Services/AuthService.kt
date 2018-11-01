@@ -1,6 +1,5 @@
 package com.example.serhiivorobiov.smack.Services
 
-import android.support.annotation.VisibleForTesting
 import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response

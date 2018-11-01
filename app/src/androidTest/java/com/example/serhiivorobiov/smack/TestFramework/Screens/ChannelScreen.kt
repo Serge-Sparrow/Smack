@@ -107,12 +107,14 @@ class ChannelScreen : BaseScreen() {
             .perform(click())
     }
 
-    fun clickOnEveryChannel() {
-        for (channel in 0 until MessageService.channels.size) {
-            clickOnChannel(channel)
-            message.perform(replaceText("Hello =)"))
-            messageSendBtn.perform(click())
-            openDrawer.perform(open(START))
+    fun clickOnEveryChannelAndTypeHello() {
+        if (MessageService.channels.size > 0) {
+            for (channel in 0 until MessageService.channels.size) {
+                clickOnChannel(channel)
+                message.perform(replaceText("Hello =)"))
+                messageSendBtn.perform(click())
+                openDrawer.perform(open(START))
+            }
         }
     }
 
