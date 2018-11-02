@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Controller.LoginActivity">
+        tools:context=".Controller.LoginActivity"
+        android:background="@drawable/large">
 
     <EditText
             android:layout_width="0dp"
@@ -29,11 +30,11 @@
             android:text="@string/login"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/log_act_login_btn" android:layout_marginTop="8dp"
+            android:id="@+id/log_act_login_btn" android:layout_marginTop="96dp"
             app:layout_constraintTop_toBottomOf="@+id/login_password_text" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
             android:background="@color/colorPrimary" android:textColor="@android:color/white"
-            android:onClick="onLogActLoginButtonClicked"/>
+            android:onClick="onLogActLoginButtonClicked" app:layout_constraintHorizontal_bias="0.0"/>
     <TextView
             android:text="@string/sign_up_hint"
             android:layout_width="wrap_content"
@@ -45,11 +46,12 @@
             android:text="@string/user_create_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/user_create_btn" android:layout_marginTop="8dp"
+            android:id="@+id/user_create_btn" android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/text_login_screen" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="32dp" android:background="@color/colorPrimary"
-            android:textColor="@android:color/white" android:onClick="onUserCreateButtonClicked"/>
+            android:textColor="@android:color/white" android:onClick="onUserCreateButtonClicked"
+            app:layout_constraintHorizontal_bias="0.0"/>
     <ProgressBar
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
@@ -62,7 +64,7 @@
             android:text="Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/crashBtn" android:layout_marginTop="8dp"
+            android:id="@+id/crashBtn" android:layout_marginTop="20dp"
             app:layout_constraintTop_toBottomOf="@+id/user_create_btn" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
             android:onClick="onCrashClicked" android:visibility="invisible"/>

@@ -12,9 +12,9 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import com.example.serhiivorobiov.smack.Adapters.MessageAdapter
@@ -33,21 +33,55 @@ import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 import com.example.serhiivorobiov.smack.Model.Message
 import com.crashlytics.android.Crashlytics
+import com.example.serhiivorobiov.smack.Adapters.ChannelAdapter
+import com.example.serhiivorobiov.smack.Services.DeleteChannelService
 import io.fabric.sdk.android.Fabric
 
 class MainActivity : AppCompatActivity() {
 
     var selectedChannel: Channel? = null
-    lateinit var channelAdapter: ArrayAdapter<Channel>
+    lateinit var channelAdapter: ChannelAdapter
     val socket = IO.socket(SOCKET_URL)
     lateinit var messageAdapter: MessageAdapter
 
     private fun setUpAdapter() {
-        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-            MessageService.channels)
-        channel_list.adapter = channelAdapter
 
-        messageAdapter = MessageAdapter(this, MessageService.messages)
+        channelAdapter = ChannelAdapter(this, MessageService.channels, clickItem = { channel:Channel->
+            selectedChannel = channel
+                drawer_layout.closeDrawer(GravityCompat.START)
+            updateWithChannel()
+        }) {button -> if (MessageService.channels.count() > 1) {
+            val view = channel_list.findContainingViewHolder(button)
+            val index = view?.layoutPosition
+            val channel = MessageService.channels[index!!]
+            DeleteChannelService.deleteChannel(channel.id) { successDelete ->
+                if (successDelete) {
+
+                    val channelToDelete = Channel(channel.name, channel.description, channel.id)
+                    MessageService.channels.remove(channelToDelete)
+                    MessageService.getChannels { _ ->
+                        selectedChannel = MessageService.channels[0]
+                        channelAdapter.notifyDataSetChanged()
+                        MessageService.getChannels { }
+
+                    }
+                } else {
+                    print("Something wrong with channel deletion")
+                }
+            }
+        }
+        else{
+            DeleteChannelService.deleteChannel(MessageService.channels[0].id){}
+            MessageService.clearChannels()
+            channelAdapter.notifyItemRemoved(0)
+
+                    }
+                }
+
+        channel_list.adapter = channelAdapter
+        channel_list.layoutManager = LinearLayoutManager(this)
+
+            messageAdapter = MessageAdapter(this, MessageService.messages)
         message_list_view.adapter = messageAdapter
         message_list_view.layoutManager = LinearLayoutManager(this)
 }
@@ -67,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                     if (MessageService.channels.count() > 0) {
                         selectedChannel = MessageService.channels[0]
                         channelAdapter.notifyDataSetChanged()
-                        updateWithChannel()
+                        MessageService.getChannels {  }
                     }
                 }
             }
@@ -113,11 +147,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         if (App.prefs.isLoggedIn) {
             FindUserByEmailService.findUser(this) {}
-            channel_list.setOnItemClickListener { _, _, position, _ ->
-                selectedChannel = MessageService.channels[position]
-                drawer_layout.closeDrawer(GravityCompat.START)
-                updateWithChannel()
-            }
         }
     }
 

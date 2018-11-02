@@ -26,12 +26,14 @@
         <include layout="@layout/nav_header_main"
         android:id="@+id/nav_header_include"/>
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/nav_header_include"
-                android:id="@+id/channel_list">
-        </ListView>
+                android:id="@+id/channel_list"
+                android:layout_alignParentStart="true" android:layout_marginTop="-2dp"
+                android:background="@drawable/f8fce33f27d0a">
+        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 

@@ -15,7 +15,6 @@ object UserDataService {
     @VisibleForTesting
     var email = ""
     var avatarResId = 0
-
     @VisibleForTesting
     fun logout() {
         avatarResId = 0
