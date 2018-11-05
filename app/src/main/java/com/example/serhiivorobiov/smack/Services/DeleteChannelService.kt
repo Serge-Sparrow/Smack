@@ -1,27 +1,26 @@
 package com.example.serhiivorobiov.smack.Services
 
-//import android.support.test.espresso.idling.CountingIdlingResource
+// import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.example.serhiivorobiov.smack.Controller.App
+import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import com.example.serhiivorobiov.smack.Utilities.URL_DELETE_CHANNEL
 
 object DeleteChannelService {
 
-//        val deleteUserIR = CountingIdlingResource("IR for delete user request", true)
-
         fun deleteChannel(id: String, complete: (Boolean) -> Unit) {
             val url = "$URL_DELETE_CHANNEL$id"
 
-//            deleteUserIR.increment()
+            IdlingResourceHolding.idlingResource.increment()
             val deleteChannelRequest = object : StringRequest(
                 Method.DELETE, url,
                 Response.Listener { _ ->
                     try {
                         complete(true)
                     } finally {
-//                        deleteUserIR.decrement()
+                        IdlingResourceHolding.idlingResource.decrement()
                     }
                 },
                 Response.ErrorListener { error ->
@@ -29,7 +28,7 @@ object DeleteChannelService {
                         Log.d("ERROR", "Could not delete channel: $error")
                         complete(false)
                     } finally {
-//                        deleteUserIR.decrement()
+                        IdlingResourceHolding.idlingResource.decrement()
                     }
                 }) {
                 override fun getBodyContentType(): String {

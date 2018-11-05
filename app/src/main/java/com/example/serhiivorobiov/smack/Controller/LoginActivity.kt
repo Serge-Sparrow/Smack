@@ -12,7 +12,6 @@ import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.LoginService.userLogin
 import com.example.serhiivorobiov.smack.Services.FindUserByEmailService
 import kotlinx.android.synthetic.main.activity_login.*
-import java.lang.Thread.sleep
 
 class LoginActivity : AppCompatActivity() {
 
@@ -26,14 +25,14 @@ class LoginActivity : AppCompatActivity() {
         enableSpinner(true)
         val email = login_email_text.text.toString()
         val password = login_password_text.text.toString()
-        sleep(1000)
         if (email.isNotEmpty() && password.isNotEmpty()) {
             hideKeyboard()
             userLogin(email, password) { loginSuccess ->
                 if (loginSuccess) {
                     FindUserByEmailService.findUser(this) { findSuccess ->
-                        if (findSuccess) finish()
-                        else errorToast()
+                        if (findSuccess) {
+                            finish()
+                        } else errorToast()
                     }
                 } else errorToast()
             }

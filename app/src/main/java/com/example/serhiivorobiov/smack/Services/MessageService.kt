@@ -8,6 +8,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.example.serhiivorobiov.smack.Controller.App
 import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.Model.Message
+import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import com.example.serhiivorobiov.smack.Utilities.URL_GET_CHANNELS
 import com.example.serhiivorobiov.smack.Utilities.URL_GET_MESSAGES
 import org.json.JSONException
@@ -20,6 +21,7 @@ object MessageService {
     val messages = ArrayList<Message>()
 
     fun getChannels(complete: (Boolean) -> Unit) {
+        IdlingResourceHolding.idlingResource.increment()
         val channelsRequest = object : JsonArrayRequest(Method.GET, URL_GET_CHANNELS, null,
             Listener { response ->
             clearChannels()
@@ -37,11 +39,17 @@ object MessageService {
         } catch (e: JSONException) {
                 Log.d("JSON", "EXC: " + e.localizedMessage)
                 complete(false)
+            } finally {
+            IdlingResourceHolding.idlingResource.decrement()
             }
         },
             Response.ErrorListener { _ ->
-                Log.d("ERROR", "Could not retrieve channels")
-                complete(false)
+                try {
+                    Log.d("ERROR", "Could not retrieve channels")
+                    complete(false)
+                } finally {
+                    IdlingResourceHolding.idlingResource.decrement()
+                }
             }) {
 
             override fun getBodyContentType(): String {
@@ -58,7 +66,7 @@ object MessageService {
 
     fun getMessages(channelId: String, complete: (Boolean) -> Unit) {
         val url = "$URL_GET_MESSAGES$channelId"
-
+        IdlingResourceHolding.idlingResource.increment()
         val messagesRequest = object : JsonArrayRequest(Method.GET, url, null,
             Listener { response ->
             clearMessages()
@@ -82,11 +90,17 @@ object MessageService {
             } catch (e: JSONException) {
                 Log.d("JSON", "EXC: " + e.localizedMessage)
                 complete(false)
+            } finally {
+                IdlingResourceHolding.idlingResource.decrement()
             }
         },
             Response.ErrorListener { _ ->
-                Log.d("ERROR", "Could not retrieve messages")
-                complete(false)
+                try {
+                    Log.d("ERROR", "Could not retrieve messages")
+                    complete(false)
+                } finally {
+                    IdlingResourceHolding.idlingResource.decrement()
+                }
             }) {
 
             override fun getBodyContentType(): String {

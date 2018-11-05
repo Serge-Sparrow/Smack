@@ -5,10 +5,7 @@ import android.support.test.espresso.matcher.ViewMatchers.assertThat
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.example.serhiivorobiov.smack.Controller.MainActivity
-import com.example.serhiivorobiov.smack.Services.AddUserService
-import com.example.serhiivorobiov.smack.Services.AuthService
 import com.example.serhiivorobiov.smack.Services.DeleteUserService
-import com.example.serhiivorobiov.smack.Services.LoginService
 import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.Services.UserDataService.id
 import com.example.serhiivorobiov.smack.TestFramework.Screens.ChatScreen
@@ -19,15 +16,13 @@ import com.example.serhiivorobiov.smack.TestFramework.Utilities.PASSWORD_HINT
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.SUCCESS_NEW_USER_AND_ACC
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.SUCCESS_NEW_USER_EXIST_ACC
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.USER_NAME_HINT
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
-import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_USER_NAME
+import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4::class)
 class CreateUserTests {
@@ -36,30 +31,9 @@ class CreateUserTests {
     val mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
-    fun registerIR() {
-        IdlingRegistry.getInstance().register(AuthService.registerCountingIR)
-        IdlingRegistry.getInstance().register(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().register(AddUserService.userCountingIdlingResource)
-        IdlingRegistry.getInstance().register(DeleteUserService.deleteUserIR)
-    }
-
-    @Before
-    fun logout() {
+    fun beforeEachTest() {
         UserDataService.logout()
-    }
-
-    @After
-    fun deleteCreatedUser() {
-        val userName = UserDataService.name
-        val userId = id
-        if (userId != "") {
-            DeleteUserService.deleteUser(userName, userId) { _ ->
-            }
-        }
-        IdlingRegistry.getInstance().unregister(DeleteUserService.deleteUserIR)
-        IdlingRegistry.getInstance().unregister(AuthService.registerCountingIR)
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(AddUserService.userCountingIdlingResource)
+    IdlingRegistry.getInstance().register(IdlingResourceHolding.idlingResource)
     }
 
     @Test
@@ -80,18 +54,6 @@ class CreateUserTests {
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         val createUserScreen = loginScreen.clickOnSignUpButton()
         createUserScreen.onClickCreateUserButton(SUCCESS_NEW_USER_AND_ACC)
-    }
-
-    @Test
-    fun checkThatDrawerHeaderContainsCorrectInfoAfterUserCreation() {
-
-        val chatScreen = ChatScreen()
-        val channelScreen = chatScreen.onBurgerClick()
-        val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
-        val createUserScreen = loginScreen.clickOnSignUpButton()
-        createUserScreen.onClickCreateUserButton(SUCCESS_NEW_USER_EXIST_ACC)
-        assertThat(channelScreen.userNameTxt, equalTo(VALID_USER_NAME))
-        assertThat(channelScreen.userEmailTxt, equalTo(VALID_EMAIL))
     }
 
     @Test
@@ -133,5 +95,16 @@ class CreateUserTests {
         val loginScreen = channelScreen.onLoginBtnClick() as LoginScreen
         val createUserScreen = loginScreen.clickOnSignUpButton()
         assertThat(createUserScreen.userNameHint, equalTo(USER_NAME_HINT))
+    }
+
+    @After
+    fun afterEachTest() {
+        val userName = UserDataService.name
+        val userId = id
+        if (userId != "") {
+            DeleteUserService.deleteUser(userName, userId) { _ ->
+            }
+        }
+        IdlingRegistry.getInstance().unregister(IdlingResourceHolding.idlingResource)
     }
 }

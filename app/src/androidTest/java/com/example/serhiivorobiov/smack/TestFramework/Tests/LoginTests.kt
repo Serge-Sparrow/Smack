@@ -5,8 +5,6 @@ import android.support.test.espresso.matcher.ViewMatchers.assertThat
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.example.serhiivorobiov.smack.Controller.MainActivity
-import com.example.serhiivorobiov.smack.Services.FindUserByEmailService
-import com.example.serhiivorobiov.smack.Services.LoginService
 import com.example.serhiivorobiov.smack.Services.UserDataService
 import com.example.serhiivorobiov.smack.TestFramework.Screens.ChatScreen
 import com.example.serhiivorobiov.smack.TestFramework.Screens.LoginScreen
@@ -20,6 +18,7 @@ import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_EMAIL
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_LOGIN
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_USER_NAME
+import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
@@ -35,9 +34,8 @@ class LoginTests {
     val mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Before
-    fun registerIR() {
-        IdlingRegistry.getInstance().register(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().register(FindUserByEmailService.findUserByEmailIR)
+    fun beforeEachTest() {
+        IdlingRegistry.getInstance().register(IdlingResourceHolding.idlingResource)
     }
 
     @Test
@@ -97,12 +95,8 @@ class LoginTests {
     }
 
     @After
-    fun deleteCreatedUser() {
-        IdlingRegistry.getInstance().unregister(LoginService.loginCountingIdlingResource)
-        IdlingRegistry.getInstance().unregister(FindUserByEmailService.findUserByEmailIR)
-    }
-    @After
-    fun logoutExtra() {
+    fun afterEachTest() {
         UserDataService.logout()
+        IdlingRegistry.getInstance().unregister(IdlingResourceHolding.idlingResource)
     }
 }

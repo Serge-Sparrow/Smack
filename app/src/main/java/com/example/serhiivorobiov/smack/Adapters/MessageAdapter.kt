@@ -1,12 +1,12 @@
 package com.example.serhiivorobiov.smack.Adapters
 
 import android.content.Context
-import android.support.annotation.VisibleForTesting
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.serhiivorobiov.smack.Model.Message
@@ -18,13 +18,15 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-@VisibleForTesting
-class MessageAdapter(val context: Context, val messages: ArrayList<Message>) : RecyclerView
-                    .Adapter<MessageAdapter.ViewHolder>() {
+class MessageAdapter(
+    val context: Context,
+    val messages: ArrayList<Message>,
+    val deleteBtnClick: (Button) -> Unit
+) : RecyclerView.Adapter<MessageAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.message_list_view, p0, false)
-        return ViewHolder(view)
+        return ViewHolder(view, deleteBtnClick)
     }
 
     override fun getItemCount(): Int {
@@ -36,11 +38,12 @@ class MessageAdapter(val context: Context, val messages: ArrayList<Message>) : R
         p0.bindMessage(context, messages[p1])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, val deleteBtnClick: (Button) -> Unit) : RecyclerView.ViewHolder(itemView) {
         val image = itemView.findViewById<ImageView>(R.id.message_user_image)
         val timeStamp = itemView.findViewById<TextView>(R.id.message_date)
         val msgBody = itemView.findViewById<TextView>(R.id.message_body)
         val userName = itemView.findViewById<TextView>(R.id.message_name)
+        val deleteBtn = itemView.findViewById<Button>(R.id.message_dlt_btn)
 
         fun bindMessage(context: Context, message: Message) {
 
@@ -51,8 +54,12 @@ class MessageAdapter(val context: Context, val messages: ArrayList<Message>) : R
             userName.text = message.userName
             timeStamp.text = returnDateString(message.timeStamp)
             msgBody.text = message.message
+            deleteBtn.setOnClickListener {
+                deleteBtnClick(this.deleteBtn)
+            }
         }
     }
+
     fun returnDateString(isoString: String): String {
         val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'", Locale.getDefault())
         isoFormatter.timeZone = TimeZone.getTimeZone("UTC")

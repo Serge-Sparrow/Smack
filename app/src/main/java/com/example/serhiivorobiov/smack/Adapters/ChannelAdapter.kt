@@ -11,7 +11,9 @@ import com.example.serhiivorobiov.smack.Model.Channel
 import com.example.serhiivorobiov.smack.R
 
 class ChannelAdapter(
-    val context: Context, val channels: ArrayList<Channel>, val clickItem: (Channel) -> Unit,
+    val context: Context,
+    val channels: ArrayList<Channel>,
+    val clickItem: (Channel) -> Unit,
     val clickDelete: (ImageButton) -> Unit
 ) : RecyclerView.Adapter<ChannelAdapter.ViewHolder>() {
 
@@ -40,6 +42,5 @@ class ChannelAdapter(
     override fun onBindViewHolder(p0: ChannelAdapter.ViewHolder, p1: Int) {
 
         p0.bindChannel(context, channels[p1])
-
     }
 }

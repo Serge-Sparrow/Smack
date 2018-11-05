@@ -1,17 +1,15 @@
 package com.example.serhiivorobiov.smack.Services
 
-import android.support.test.espresso.idling.CountingIdlingResource
 import android.util.Log
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.serhiivorobiov.smack.Controller.App
+import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import com.example.serhiivorobiov.smack.Utilities.URL_ADD_USER
 import org.json.JSONException
 import org.json.JSONObject
 
 object AddUserService {
-
-    val userCountingIdlingResource = CountingIdlingResource("Create User IR", true)
 
 fun createUser(name: String, email: String, avatarName: String, avatarColor: String, complete: (Boolean) -> Unit) {
     val jsonBody = JSONObject()
@@ -21,7 +19,7 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
     jsonBody.put("avatarColor", avatarColor)
     val requestBody = jsonBody.toString()
 
-    userCountingIdlingResource.increment()
+    IdlingResourceHolding.idlingResource.increment()
     val createUserRequest = object : JsonObjectRequest(
         Method.POST, URL_ADD_USER, null,
         Response.Listener { response ->
@@ -36,7 +34,7 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
                 Log.d("JSON", "EXC" + e.localizedMessage)
                 complete(false)
             } finally {
-                userCountingIdlingResource.decrement()
+                IdlingResourceHolding.idlingResource.decrement()
             }
         },
         Response.ErrorListener { error ->
@@ -44,7 +42,7 @@ fun createUser(name: String, email: String, avatarName: String, avatarColor: Str
                 Log.d("ERROR", "Could not add user: $error")
                 complete(false)
         } finally {
-            userCountingIdlingResource.decrement()
+                IdlingResourceHolding.idlingResource.decrement()
         }
         }) {
         override fun getBodyContentType(): String {

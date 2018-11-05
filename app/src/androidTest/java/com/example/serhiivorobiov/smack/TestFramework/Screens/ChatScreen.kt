@@ -6,17 +6,26 @@ import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.action.ViewActions.replaceText
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions
+import android.support.test.espresso.matcher.RootMatchers.withDecorView
+import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
 import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.support.test.espresso.matcher.ViewMatchers.withContentDescription
+import android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.rule.ActivityTestRule
+import com.example.serhiivorobiov.smack.Adapters.ChannelAdapter
 import com.example.serhiivorobiov.smack.Adapters.MessageAdapter
+import com.example.serhiivorobiov.smack.Controller.MainActivity
 import com.example.serhiivorobiov.smack.R
 import com.example.serhiivorobiov.smack.Services.MessageService
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.MESSAGE_TEXT
+import com.example.serhiivorobiov.smack.TestFramework.Utilities.clickDeleteMessage
 import com.example.serhiivorobiov.smack.TestFramework.Utilities.getTextHint
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.not
 import java.util.concurrent.atomic.AtomicReference
 
 class ChatScreen : BaseScreen() {
@@ -28,6 +37,26 @@ class ChatScreen : BaseScreen() {
     private val messageSendBtn = onView(withId(R.id.send_image_btn))
     val messagesInChannel = onView(withId(R.id.message_list_view))
     private var messageBodyHolder = ""
+
+    val toastNoChannelSelected: ViewInteraction? = onView(
+        ViewMatchers.withText("Please, create or select channel first!")
+    )
+    val toastNoMessageBody: ViewInteraction? = onView(
+        withText("Please, type message first!")
+    )
+
+    val snackNotLogIn: ViewInteraction? = onView(
+        withText("Please, log in first!")
+    )
+
+    val snackLogInAction: ViewInteraction? = onView(
+        allOf(withText("Login"), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))
+    )
+
+    fun checkIsToastDisplayed(rule: ActivityTestRule<MainActivity>, toastType: ViewInteraction?) {
+        toastType?.inRoot(withDecorView(not(`is`(rule.activity.window.decorView))))
+            ?.check(matches(isDisplayed()))
+    }
 
     fun clickOnMessageSendBtn() {
         messageSendBtn.perform(click())
@@ -67,6 +96,12 @@ class ChatScreen : BaseScreen() {
             "$MESSAGE_TEXT 1"
         }
         message.perform(replaceText(messageBodyHolder))
+    }
+
+    fun deleteMessageAtPosition(position: Int) {
+
+        messagesInChannel.perform(RecyclerViewActions
+            .actionOnItemAtPosition<ChannelAdapter.ViewHolder>(position, clickDeleteMessage()))
     }
 
     fun scrollMessages() {

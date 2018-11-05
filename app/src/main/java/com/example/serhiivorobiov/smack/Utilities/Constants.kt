@@ -10,5 +10,6 @@ const val URL_GET_CHANNELS = "${BASE_URL}channel"
 const val URL_GET_MESSAGES = "${BASE_URL}message/byChannel/"
 const val URL_DELETE_USER = "${BASE_URL}user/"
 const val URL_DELETE_CHANNEL = "${BASE_URL}channel/"
+const val URL_DELETE_MESSAGE = "${BASE_URL}message/"
 
 const val BROADCAST_USER_DATA_CHANGE = "BROADCAST USER DATA CHANGE"
