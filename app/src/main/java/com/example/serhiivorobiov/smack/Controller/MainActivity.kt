@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             val text = "Please, log in first!"
             hideKeyboard()
-            val snack = Snackbar.make(root_layout, text, Snackbar.LENGTH_LONG)
+            val snack = Snackbar.make(root_layout, text, Snackbar.LENGTH_LONG).setActionTextColor(Color.WHITE)
             .setAction("Login") {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
