@@ -11,7 +11,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object LoginService {
-@VisibleForTesting
     fun userLogin(email: String, password: String, complete: (Boolean) -> Unit) {
 
         val jsonBody = JSONObject()

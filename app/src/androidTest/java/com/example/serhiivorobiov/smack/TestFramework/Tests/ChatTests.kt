@@ -23,6 +23,7 @@ import com.example.serhiivorobiov.smack.TestFramework.Utilities.VALID_PASSWORD
 import com.example.serhiivorobiov.smack.Utilities.IdlingResourceHolding
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
+import org.junit.AfterClass
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

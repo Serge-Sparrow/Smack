@@ -21,7 +21,7 @@ class ChannelAdapter(
         val channelName = itemView.findViewById<TextView>(R.id.channel_name)
         val deleteChannel = itemView.findViewById<ImageButton>(R.id.delete_channel)
 
-        fun bindChannel(context: Context, channel: Channel) {
+        fun bindChannel(channel: Channel) {
             channelName.text = channel.name
             itemView.setOnClickListener {
                 clickItem(channel)
@@ -41,6 +41,6 @@ class ChannelAdapter(
     }
     override fun onBindViewHolder(p0: ChannelAdapter.ViewHolder, p1: Int) {
 
-        p0.bindChannel(context, channels[p1])
+        p0.bindChannel(channels[p1])
     }
 }

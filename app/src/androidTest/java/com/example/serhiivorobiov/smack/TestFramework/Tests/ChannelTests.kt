@@ -30,7 +30,8 @@ class ChannelTests {
     companion object {
 
         @AfterClass
-        @JvmStatic fun teardown() {
+        @JvmStatic fun ghuigi() {
+            println("HELLLLLLLLOOOOO")
         }
     }
 

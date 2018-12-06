@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         channel_list.layoutManager = LinearLayoutManager(this)
 
         messageAdapter = MessageAdapter(this, MessageService.messages) {
-
                 button ->
             val view = message_list_view.findContainingViewHolder(button)
             val index = view?.layoutPosition
